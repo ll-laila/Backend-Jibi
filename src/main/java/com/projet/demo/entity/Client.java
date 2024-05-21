@@ -8,31 +8,35 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-
 @Entity
 public class Client extends User {
 
     @Column(nullable = false)
     private String cin;
 
-    //private String dob;
-
     @ManyToOne
     private User verifiedBy;
 
-    /*@OneToOne(mappedBy = "client")
-    private PaymentAccount account;
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "paymentAccountId", referencedColumnName = "paymentAccountId")
+    private PaymentAccount paymentAccount;
+
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
+    private List<BankAccount> bankAccounts = new ArrayList<>();
+
 
     @OneToMany(mappedBy = "client")
     List<Operation> operations;
 
-    @Enumerated(EnumType.STRING)
-    private AccountLimit desiredAccountLimit;*/
+
 
 }
