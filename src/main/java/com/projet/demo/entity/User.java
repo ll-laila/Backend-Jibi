@@ -6,10 +6,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.security.core.GrantedAuthority;
+/*import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
+*/
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
@@ -22,7 +22,7 @@ import java.util.Collections;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class User implements UserDetails {
+public abstract class User{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -52,7 +52,7 @@ public abstract class User implements UserDetails {
         fullName = (firstName + " " + lastName).stripTrailing();
     }
 
-    @Override
+   /* @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singleton(
                 new SimpleGrantedAuthority("USER")
@@ -77,5 +77,5 @@ public abstract class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return enabled;
-    }
+    }*/
 }
