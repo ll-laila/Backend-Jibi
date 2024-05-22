@@ -1,8 +1,8 @@
 package com.projet.demo.entity;
 
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,6 +27,7 @@ public class Agent {
     private String ImmNumber ;
     private String patentNumber ;
     private String password ;
+
 
     private String image;
 
