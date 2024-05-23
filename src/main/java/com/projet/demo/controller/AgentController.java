@@ -1,7 +1,6 @@
 package com.projet.demo.controller;
 
 import com.projet.demo.entity.Agent;
-import com.projet.demo.entity.PasswordGenerator;
 import com.projet.demo.service.AgentService;
 import com.projet.demo.service.SmsService;
 import com.projet.demo.twilio.OtpResponseDto;
@@ -18,6 +17,7 @@ import java.util.Random;
 
 @AllArgsConstructor
 @RestController
+@CrossOrigin("*")
 @RequestMapping("/api/agents")
 public class AgentController {
 
@@ -32,6 +32,8 @@ public class AgentController {
         agent.setPassword(otp);
         System.out.println(agent.getPassword());
         Agent createdAgent = agentService.addAgent(agent);
+        System.out.println(createdAgent.getImmNumber());
+        System.out.println(createdAgent.getIdentityNumber());
         String otpMessage = "Welcome " + createdAgent.getFirstName() + "! Your account has been created. Your temporary password is: " + otp;
         OtpResponseDto stat=smsService.sendSMS(createdAgent,createdAgent.getPhoneNumber(), otpMessage);
         System.out.println(stat);
