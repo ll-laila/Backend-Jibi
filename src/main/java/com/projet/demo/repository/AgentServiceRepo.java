@@ -1,18 +1,17 @@
 package com.projet.demo.repository;
 
-import com.projet.demo.entity.Client;
+
+import com.projet.demo.entity.AgentService;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
-public interface ClientRepo extends JpaRepository<Client, Long> {
+public interface AgentServiceRepo extends JpaRepository<AgentService,Long> {
 
-    boolean existsByEmail(String email);
-
-    boolean existsByPhoneNumber(String phoneNumber);
+    @Query("SELECT a FROM AgentService a WHERE a.agent.id = :agentId")
+    List<AgentService> findAllByAgentId(@Param("agentId") Long agentId);
 }

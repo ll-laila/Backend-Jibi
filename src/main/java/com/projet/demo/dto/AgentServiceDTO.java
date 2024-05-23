@@ -1,5 +1,6 @@
 package com.projet.demo.dto;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,17 +10,15 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AgentDTO {
-    private String id;
+public class AgentServiceDTO {
 
-    private String firstName;
+    private Integer id;
+    private String name;
+    private ServiceType type;
 
-    private String lastName;
+    public enum ServiceType {
+        FACTURE,
+        RECHARGE
+    }
 
-    private String phoneNumber;
-
-    private String email;
-
-    private String agency;
 }
-

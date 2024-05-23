@@ -1,23 +1,37 @@
 package com.projet.demo.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Date;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
 
 @Entity
-public class Agent extends User {
+public class Agent {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+    private String firstName;
+    private String lastName ;
+    private String address ;
+    private String email ;
+    //@Column(unique = true)
+    private String identityNumber;
+    private String phoneNumber ;
+    //@Column(unique = true)
+    private String immNumber ;
+    private String patentNumber ;
+    private String password ;
 
-    @ManyToOne
-    private Agency agency;
+
+
+    //private String filePath;
+
 }

@@ -65,7 +65,7 @@ public class AgentService {
                 .isPaymentAccountOn(false)
                 .createdAt(LocalDateTime.now())
                 .isPaymentAccountOn(false)
-                .birthdDate(request.getBirthdDate())
+                .birthDate(request.getBirthDate())
                 .build();
         var savedAgent = repository.save(Clinet);
         TextMessage message = new TextMessage(BRAND_NAME, request.getPhoneNumber(), "Your password is : " + generatedpassword);
@@ -90,7 +90,7 @@ public class AgentService {
             existingClient.setAddress(client.getAddress());
             existingClient.setCin(client.getCin());
             existingClient.setPhoneNumber(client.getPhoneNumber());
-            existingClient.setBirthdDate(client.getBirthdDate());
+            existingClient.setBirthDate(client.getBirthDate());
 
             // Save the updated client
             repository.save(existingClient);

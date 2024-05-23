@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
+
 //import org.springframework.security.core.GrantedAuthority;
 //import org.springframework.security.core.authority.SimpleGrantedAuthority;
 //import org.springframework.security.core.userdetails.UserDetails;
@@ -14,6 +15,11 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+
+
+import java.time.LocalDateTime;
+
+
 
 @Data
 @NoArgsConstructor
@@ -29,28 +35,18 @@ public abstract class User {
     private Long id;
 
     @Column(name = "first_name")
+
     private String firstName;
     @Column(name = "last_name")
     private String lastName;
-
-
-    private String email;
     @Column(name = "phone_number")
-    private String phoneNumber;
+    private String email;
 
+    private String phoneNumber;
     private String password;
 
-    @Column(name = "birthd_date")
-    private  LocalDateTime birthdDate;
 
 
-    @CreationTimestamp
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
-    private boolean enabled;
-    @Column(name = "first_login")
-    private boolean firstLogin;
 
 
 
@@ -80,4 +76,5 @@ public abstract class User {
 //    public boolean isEnabled() {
 //        return enabled;
 //    }
+
 }
