@@ -30,7 +30,7 @@ public class Agent {
     private String patentNumber ;
     private String password ;
 
-    private Date dateBirth;
+
 
     //private String filePath;
 
