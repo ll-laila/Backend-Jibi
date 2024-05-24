@@ -9,7 +9,7 @@ public class AgentServiceMapper {
         return AgentServiceDTO.builder()
                 .id(Integer.valueOf(String.valueOf(agentService.getId())))
                 .name(agentService.getName())
-                .type(AgentServiceDTO.ServiceType.valueOf(agentService.getType()))
+                .type(agentService.getType())
                 .build();
     }
 

@@ -22,14 +22,14 @@ public class Agent {
     private String lastName ;
     private String address ;
     private String email ;
-    //@Column(unique = true)
+    @Column(unique = true)
     private String identityNumber;
     private String phoneNumber ;
-    //@Column(unique = true)
-    private String immNumber ;
+    @Column(unique = true)
+    private String ImmNumber ;
     private String patentNumber ;
     private String password ;
-
+    private String image;
 
 
     //private String filePath;

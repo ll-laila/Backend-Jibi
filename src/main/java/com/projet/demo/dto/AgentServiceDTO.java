@@ -14,11 +14,6 @@ public class AgentServiceDTO {
 
     private Integer id;
     private String name;
-    private ServiceType type;
-
-    public enum ServiceType {
-        FACTURE,
-        RECHARGE
-    }
+    private String type;
 
 }

@@ -17,12 +17,10 @@ public class ClientDTO {
     private Integer id;
     private String firstName;
     private String lastName;
+    private String address;
     private String cin;
-    private String username;
     private String email;
     private String phoneNumber;
     private String password;
-    private double balance;
-    private LocalDate paymentAccountCreatedDate;
 
 }

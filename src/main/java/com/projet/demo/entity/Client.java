@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -24,15 +25,12 @@ import java.util.List;
 @Entity
 public class Client extends User {
 
-
-
     @Column(nullable = false)
     private String cin;
     private String address;
     @Column(name = "new_password")
     private String newPassword;
-    @JsonIgnore
-    private String password;
+
     @Column(name = "is_first_login")
     private Boolean isFirstLogin ;
     @Column(name = "creation_date")
@@ -63,16 +61,15 @@ public class Client extends User {
     List<Operation> operations;
 
     @Column(name = "birth_date")
-    private LocalDateTime birthDate;
+    private Date birthDate;
 
 
     @CreationTimestamp
     @Column(name = "created_at")
     private LocalDateTime createdAt;
-
-    private boolean enabled;
+    // @Column(nullable = false)
+    //private boolean enabled;
     @Column(name = "first_login")
     private boolean firstLogin;
-
 
 }

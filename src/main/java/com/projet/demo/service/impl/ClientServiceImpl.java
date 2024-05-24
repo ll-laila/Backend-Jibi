@@ -1,73 +1,74 @@
 package com.projet.demo.service.impl;
 
 
+import com.projet.demo.dto.AgentDTO;
 import com.projet.demo.dto.ClientDTO;
 import com.projet.demo.dto.ClientWithPaymentAccountDTO;
 import com.projet.demo.dto.PaymentAccountDTO;
+import com.projet.demo.entity.Agent;
 import com.projet.demo.entity.Client;
 import com.projet.demo.entity.PaymentAccount;
+import com.projet.demo.mapper.AgentMapper;
+import com.projet.demo.mapper.ClientMapper;
+import com.projet.demo.mapper.PaymentAccountMapper;
+import com.projet.demo.repository.AgentRepo;
 import com.projet.demo.repository.ClientRepo;
 import com.projet.demo.repository.PaymentAccountRepo;
 import com.projet.demo.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ClientServiceImpl implements ClientService {
+
     @Autowired
     private ClientRepo clientRepository;
 
-    //private PaymentAccountRepo paymentAccountRepository;
-    public PaymentAccountDTO getPaymentAccount(long id) {
-        Client client = clientRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid client ID"));
-        return PaymentAccountDTO.builder().id(Math.toIntExact(client.getPaymentAccount().getPaymentAccountId()))
-                .balance(client.getPaymentAccount().getBalance()).createdDate(client.getPaymentAccount().getCreatedDate()).build();
-    }
+    @Autowired
+    private PaymentAccountRepo paymentAccountRepo;
 
-    public Optional<Client> getAccountById(long id) {
-        return clientRepository.findById(id);
-
-    }
+    @Autowired
+    private  AgentRepo agentRepo;
 
 
     @Override
-
-    public ClientDTO getAccountByPhoneNumber(String phoneNumber) {
-        Client client = clientRepository.findByPhoneNumber(phoneNumber);
-        return ClientDTO.builder().id(Math.toIntExact(client.getId())).firstName(client.getFirstName()).lastName(client.getLastName()).cin(client.getCin())
-                .phoneNumber(client.getPhoneNumber()).email(client.getEmail()).build();
+    public List<AgentDTO> getAllCreditors() {
+        List<Agent> agents = agentRepo.findAll();
+        return agents.stream()
+                .map(AgentMapper::ConvertToDto)
+                .collect(Collectors.toList());
     }
 
+    public PaymentAccountDTO getPaymentAccountByClientId(long id) {
+        PaymentAccount paymentAccount = paymentAccountRepo.findPaymentAccountByClientId(id);
+        if (paymentAccount != null) {
+            return PaymentAccountMapper.ConvertToDto(paymentAccount);
+        }
+        return null;
+    }
 
     @Override
-    public ClientWithPaymentAccountDTO getClientWithPaymentAccount(long id) {
-        Client client = clientRepository.getReferenceById(id);
-
-        return ClientWithPaymentAccountDTO.builder()
-                .clientId(client.getId())
-                .firstName(client.getFirstName())
-                .lastName(client.getLastName())
-                .cin(client.getCin())
-                .email(client.getEmail())
-                .phoneNumber(client.getPhoneNumber())
-                .balance(client.getPaymentAccount().getBalance())
-                .paymentAccountCreatedDate(client.getPaymentAccount().getCreatedDate())
-                .build();
-//        return client.stream()
-//                    .map(ClientWithPaymentAccountMapper::ConvertToDto)
-//                        .collect(Collectors.toList());
-    }
     public ClientDTO getClientById(long id) {
-        Client client = clientRepository.findClientByClientId(id);
-        return ClientDTO.builder().id(Math.toIntExact(client.getId())).firstName(client.getFirstName()).lastName(client.getLastName()).build();
+        Client client = clientRepository.findClientById(id);
+        if (client != null) {
+            return ClientMapper.ConvertToDto(client);
+        }
+        return null;
     }
-    public ClientWithPaymentAccountDTO getClientPaymentAccountBalance(long id) {
-        Client client = clientRepository.findClientByClientId(id);
-        //PaymentAccount paymentAccount = paymentAccountRepository.getByClientId(id);
-        return ClientWithPaymentAccountDTO.builder().clientId(client.getId()).balance(client.getPaymentAccount().getBalance()).build();
-        //.balance(client.getBalance())
+
+
+    @Override
+    public ClientDTO getClientByPhoneNumber(String phoneNumber) {
+        Client client = clientRepository.findClientByPhoneNumber(phoneNumber);
+        if (client != null) {
+            return ClientMapper.ConvertToDto(client);
+        }
+        return null;
     }
+
+
 }
