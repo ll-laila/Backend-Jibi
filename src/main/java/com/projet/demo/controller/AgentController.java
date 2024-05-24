@@ -10,9 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-//@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:4200/")
 @RestController
-@RequestMapping("/api/v1/client")
+@RequestMapping("/api/client")
 @RequiredArgsConstructor
 public class AgentController {
     private  final AgentService service;
@@ -31,7 +31,7 @@ public class AgentController {
             }
 
     )
-    @PostMapping("/register")
+    @PostMapping
     //@PreAuthorize("hasAuthority('agent:create')")
     @Hidden
     public ResponseEntity<String> registerClient(

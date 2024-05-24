@@ -19,6 +19,7 @@ public class AgentDTO {
     private String phoneNumber;
 
     private String email;
+    private String address;
 
     private String agency;
 }

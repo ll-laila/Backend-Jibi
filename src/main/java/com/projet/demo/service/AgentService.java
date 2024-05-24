@@ -48,34 +48,30 @@ public class AgentService {
 
 
     public String registerClient(Client request) {
+        System.out.println("Received request to register client: " + request);
 
-        if (repository.existsByPhoneNumber(request.getPhoneNumber()) && repository.existsByEmail(request.getEmail() ) ) {
-            throw new RuntimeException("Email Or Phone already exists");
+        if (repository.existsByPhoneNumber(request.getPhoneNumber()) || repository.existsByEmail(request.getEmail())) {
+            throw new RuntimeException("Email or Phone already exists");
         }
 
-        String generatedpassword = generatePassword();
-        var Clinet = Client.builder()
+        String generatedPassword = generatePassword();
+        var client = Client.builder()
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .email(request.getEmail())
                 .phoneNumber(request.getPhoneNumber())
                 .address(request.getAddress())
+                .password(generatePassword())
                 .cin(request.getCin())
                 .isFirstLogin(true)
                 .isPaymentAccountOn(false)
                 .createdAt(LocalDateTime.now())
-                .isPaymentAccountOn(false)
                 .birthDate(request.getBirthDate())
                 .build();
-        var savedAgent = repository.save(Clinet);
-        TextMessage message = new TextMessage(BRAND_NAME, request.getPhoneNumber(), "Your password is : " + generatedpassword);
-        SmsSubmissionResponse response = vonageClient.getSmsClient().submitMessage(message);
+        var savedClient = repository.save(client);
 
-        // Log the response to check for errors
-        response.getMessages().forEach(m -> {
-            System.out.println("Status: " + m.getStatus() + ", Error: " + m.getErrorText());
-        });
-        return "success ";
+        System.out.println("Client saved successfully: " + savedClient);
+        return "success " + generatedPassword;
     }
 
     public String updateClient(Long id, Client client) {
