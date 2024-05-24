@@ -11,10 +11,12 @@ public class AgentMapper {
                 .id(String.valueOf(agent.getId()))
                 .firstName(agent.getFirstName())
                 .lastName(agent.getLastName())
-                .address(agent.getAddress())
+                //.address(agent.getAddress())
                 .phoneNumber(agent.getPhoneNumber())
                 .email(agent.getEmail())
+
                 //.image(agent.getImage())
+
                 .build();
     }
 }

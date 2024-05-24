@@ -19,7 +19,7 @@ public class ClientServiceImpl implements ClientService {
     @Autowired
     private ClientRepo clientRepository;
 
-    private PaymentAccountRepo paymentAccountRepository;
+    //private PaymentAccountRepo paymentAccountRepository;
     public PaymentAccountDTO getPaymentAccount(long id) {
         Client client = clientRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid client ID"));

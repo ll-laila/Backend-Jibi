@@ -1,13 +1,17 @@
 package com.projet.demo.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,12 +20,33 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-//@SuperBuilder
+@SuperBuilder
 @Entity
 public class Client extends User {
 
+
+
     @Column(nullable = false)
     private String cin;
+    private String address;
+    @Column(name = "new_password")
+    private String newPassword;
+    @JsonIgnore
+    private String password;
+    @Column(name = "is_first_login")
+    private Boolean isFirstLogin ;
+    @Column(name = "creation_date")
+    private LocalDate creationDate;
+
+
+    //private String CommercialRn ;
+    //private String patentNumber ;
+    @Column(name = "is_payment_account_on")
+    private Boolean isPaymentAccountOn ;
+    @Column(name = "verification_code")
+    private String verificationCode;
+    @Column(name = "verification_code_time")
+    private String VerificationCodeTime;
 
     @ManyToOne
     private User verifiedBy;
@@ -37,6 +62,17 @@ public class Client extends User {
     @OneToMany(mappedBy = "client")
     List<Operation> operations;
 
+    @Column(name = "birth_date")
+    private LocalDateTime birthDate;
+
+
+    @CreationTimestamp
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    private boolean enabled;
+    @Column(name = "first_login")
+    private boolean firstLogin;
 
 
 }
