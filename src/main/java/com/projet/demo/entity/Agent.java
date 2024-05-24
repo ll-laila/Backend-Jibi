@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Date;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,16 +22,14 @@ public class Agent {
     private String lastName ;
     private String address ;
     private String email ;
-    @Column(unique = true)
+    //@Column(unique = true)
     private String identityNumber;
     private String phoneNumber ;
-    @Column(unique = true)
-    private String ImmNumber ;
+    //@Column(unique = true)
+    private String immNumber ;
     private String patentNumber ;
     private String password ;
 
-
-    private String image;
 
 
     //private String filePath;

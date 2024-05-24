@@ -16,7 +16,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
+//@SuperBuilder
 @Entity
 public class Client extends User {
 

@@ -14,6 +14,8 @@ import java.util.List;
 public interface ClientRepo extends JpaRepository<Client, Long> {
 
     Client getClientById(long id);
+    @Query(value = "SELECT c FROM Client c WHERE c.phoneNumber LIKE :phoneNumber ")
+    Client findByPhoneNumber(@Param("phoneNumber") String phoneNumber);
 
     @Query(value = "SELECT * FROM client WHERE id = ?1 ", nativeQuery = true)
     Client findClientByClientId(Long id);

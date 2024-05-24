@@ -32,25 +32,17 @@ public class ClientServiceImpl implements ClientService {
 
     }
 
+
     @Override
+
     public ClientDTO getAccountByPhoneNumber(String phoneNumber) {
-        return null;
-    }
-
-    @Override
-    public Client getClientByPhoneNumber(String phone) {
-        return null;
-    }
-
-    public ClientDTO getAccountByPhoneNumber(long id) {
-        Client client = clientRepository.getReferenceById(id);
+        Client client = clientRepository.findByPhoneNumber(phoneNumber);
         return ClientDTO.builder().id(Math.toIntExact(client.getId())).firstName(client.getFirstName()).lastName(client.getLastName()).cin(client.getCin())
                 .phoneNumber(client.getPhoneNumber()).email(client.getEmail()).build();
     }
 
+
     @Override
-
-
     public ClientWithPaymentAccountDTO getClientWithPaymentAccount(long id) {
         Client client = clientRepository.getReferenceById(id);
 
@@ -59,7 +51,6 @@ public class ClientServiceImpl implements ClientService {
                 .firstName(client.getFirstName())
                 .lastName(client.getLastName())
                 .cin(client.getCin())
-                .username(client.getUsername())
                 .email(client.getEmail())
                 .phoneNumber(client.getPhoneNumber())
                 .balance(client.getPaymentAccount().getBalance())
@@ -75,8 +66,8 @@ public class ClientServiceImpl implements ClientService {
     }
     public ClientWithPaymentAccountDTO getClientPaymentAccountBalance(long id) {
         Client client = clientRepository.findClientByClientId(id);
-        PaymentAccount paymentAccount = paymentAccountRepository.getByClientId(id);
-        return ClientWithPaymentAccountDTO.builder().clientId(client.getId()).build();
+        //PaymentAccount paymentAccount = paymentAccountRepository.getByClientId(id);
+        return ClientWithPaymentAccountDTO.builder().clientId(client.getId()).balance(client.getPaymentAccount().getBalance()).build();
         //.balance(client.getBalance())
     }
 }

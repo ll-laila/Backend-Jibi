@@ -49,6 +49,12 @@ public class ClientController {
         return new ResponseEntity<>(clientService.getClientById(id), HttpStatus.OK);
     }
 
+    @GetMapping("/profile/balance/{id}")
+    public ResponseEntity<ClientWithPaymentAccountDTO> getClientPaymentAccountBalance(@PathVariable("id") long id){
+        return new ResponseEntity<>(clientService.getClientPaymentAccountBalance(id), HttpStatus.OK);
+    }
+
+
 
 
 

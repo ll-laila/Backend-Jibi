@@ -14,7 +14,7 @@ public class AgentMapper {
                 .address(agent.getAddress())
                 .phoneNumber(agent.getPhoneNumber())
                 .email(agent.getEmail())
-                .image(agent.getImage())
+                //.image(agent.getImage())
                 .build();
     }
 }
