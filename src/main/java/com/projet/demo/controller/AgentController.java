@@ -1,4 +1,7 @@
 package com.projet.demo.controller;
+import com.projet.demo.dto.AgentDTO;
+import com.projet.demo.dto.ClientDTO;
+import com.projet.demo.entity.Agent;
 import com.projet.demo.entity.Client;
 import com.projet.demo.service.AgentService;
 import io.swagger.v3.oas.annotations.Hidden;
@@ -16,6 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AgentController {
     private  final AgentService service;
+
     @Operation(
             description = "Get endpoint for Agent",
             summary = "This is a summary for management get endpoint",
@@ -41,13 +45,24 @@ public class AgentController {
     }
 
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<String> updateClient(@PathVariable("id") Long id, @RequestBody Client updatedAgent)  {
         return ResponseEntity.ok(service.updateClient(id,updatedAgent));
     }
 
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public String deleteClient(@PathVariable("id") Long id) { return service.deleteClient(id);}
 
+
+
+    @GetMapping
+    public List<ClientDTO> getAllClient() {
+        return service.getAllClient();
+    }
+
+    @GetMapping("/{id}")
+    public Client getClient(@PathVariable("id") Long id){
+        return service.getClient(id);
+    }
 }

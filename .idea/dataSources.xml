@@ -1,25 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-<<<<<<< HEAD
-    <data-source source="LOCAL" name="jibi_db@localhost" uuid="cd941d69-f650-40ae-a5bc-078d1c3e3fae">
+    <data-source source="LOCAL" name="jibi@localhost" uuid="d689959e-6a7c-44b6-9bfc-dcebbdf9519f">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://localhost:3306/jibi_db</jdbc-url>
+      <jdbc-url>jdbc:mysql://localhost:3306/jibi</jdbc-url>
       <jdbc-additional-properties>
         <property name="com.intellij.clouds.kubernetes.db.host.port" />
         <property name="com.intellij.clouds.kubernetes.db.enabled" value="false" />
         <property name="com.intellij.clouds.kubernetes.db.resource.type" value="Deployment" />
         <property name="com.intellij.clouds.kubernetes.db.container.port" />
       </jdbc-additional-properties>
-=======
-    <data-source source="LOCAL" name="jibi@localhost" uuid="139447e9-bd25-4880-9fcd-e42c83aa492c">
-      <driver-ref>mysql.8</driver-ref>
-      <synchronize>true</synchronize>
-      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://localhost:3306/jibi</jdbc-url>
->>>>>>> 29758fa57a2a7f1cb71c5de9c42f5a7fd2b00fec
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>

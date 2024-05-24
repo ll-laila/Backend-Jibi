@@ -1,6 +1,11 @@
 package com.projet.demo.service;
 
+import com.projet.demo.dto.AgentDTO;
+import com.projet.demo.dto.ClientDTO;
+import com.projet.demo.entity.Agent;
 import com.projet.demo.entity.Client;
+import com.projet.demo.mapper.AgentMapper;
+import com.projet.demo.mapper.ClientMapper;
 import com.projet.demo.repository.AgentRepo;
 import com.projet.demo.repository.ClientRepo;
 
@@ -18,12 +23,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
-
+import java.util.stream.Collectors;
 
 
 @Service
 @RequiredArgsConstructor
 public class AgentService {
+
     @Autowired
     private ClientRepo repository;
  //   private PasswordEncoder passwordEncoder;
@@ -108,6 +114,17 @@ public class AgentService {
         } else {
             return "Client with ID " + id + " not found";
         }
+    }
+
+    public List<ClientDTO> getAllClient() {
+        List<Client> clients = repository.findAll();
+        return clients.stream()
+                .map(ClientMapper::ConvertToDto)
+                .collect(Collectors.toList());
+    }
+
+    public Client getClient(Long clientId) {
+        return repository.findById(clientId).orElse(null);
     }
 
 }
