@@ -67,9 +67,11 @@ public class Client extends User {
     @CreationTimestamp
     @Column(name = "created_at")
     private LocalDateTime createdAt;
-    // @Column(nullable = false)
-    //private boolean enabled;
+
+ // @Column(nullable = false)
+   //private boolean enabled;
     @Column(name = "first_login")
     private boolean firstLogin;
 
 }
+

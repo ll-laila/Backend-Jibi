@@ -17,10 +17,14 @@ public interface ClientRepo extends JpaRepository<Client, Long> {
 
     Client findClientByPhoneNumber(String phoneNumber);
 
+    Client getClientById(long id);
 
 
     boolean existsByEmail(String email);
 
     boolean existsByPhoneNumber(String phoneNumber);
+
+
+    Client findByPhoneNumber(String phoneNumber);
 
 }
