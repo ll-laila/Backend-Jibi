@@ -1,80 +1,76 @@
 package com.projet.demo.controller;
 
-
-import com.projet.demo.dto.AgentDTO;
-import com.projet.demo.entity.Agent;
-import com.projet.demo.service.AdminService;
-
-import com.projet.demo.service.SmsService;
-import com.projet.demo.twilio.OtpResponseDto;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import com.projet.demo.model.User;
+import com.projet.demo.model.AgentRequest;
+import com.projet.demo.model.RegisterAgentResponse;
+import com.projet.demo.repository.UserRepo;
+import com.projet.demo.services.AdminService;
+import io.swagger.v3.oas.annotations.Hidden;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.DecimalFormat;
 import java.util.List;
-import java.util.Random;
 
-
-@CrossOrigin(origins = "http://localhost:4200/")
-@AllArgsConstructor
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
-@RequestMapping("/api/agents")
+@RequestMapping("/api/v1/admin")
+@PreAuthorize("hasRole('ADMIN')")
+@RequiredArgsConstructor
+
 public class AdminController {
+    private final AdminService service;
+    private final UserRepo userRepository;
 
-    @Autowired
-    private final AdminService adminService;
-
-    private final SmsService smsService;
-
-
-    @GetMapping("/allAgents")
-    public List<AgentDTO> getAllAgent() {
-        return adminService.getAllAgent();
+    @GetMapping("/list")
+   @PreAuthorize("hasAuthority('admin:read')")
+    public List<User> get() {
+        return service.findAll();
     }
 
-    @PostMapping
-    public ResponseEntity<Agent> createAgent(@RequestBody Agent agent) {
-        String otp = generateOTP();
-        agent.setPassword(otp);
-        System.out.println(agent.getPassword());
-        Agent createdAgent = adminService.addAgent(agent);
-        String otpMessage = "Welcome " + createdAgent.getFirstName() + "! Your account has been created. Your temporary password is: " + otp;
-        OtpResponseDto stat=smsService.sendSMS(createdAgent,createdAgent.getPhoneNumber(), otpMessage);
-        System.out.println(stat);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdAgent);
-    }
-    private String generateOTP() {
-        return new DecimalFormat("000000")
-                .format(new Random().nextInt(999999));
+    @GetMapping("/agent/{id}")
+    @PreAuthorize("hasAuthority('admin:read')")
+    public User getById(@PathVariable("id") Long id) {
+        User agent = service.findById(id);
+        return agent;
     }
 
-    @GetMapping
-    public List<Agent> getAllAgents(){
-        return adminService.getAllAgents();
+    @PostMapping("/register")
+    @PreAuthorize("hasAuthority('admin:create')")
+    @Hidden
+    public ResponseEntity<RegisterAgentResponse> registerAgent(
+            @RequestBody AgentRequest request
+    ) {
+        return ResponseEntity.ok(service.registerAgent(request));
     }
 
-    @GetMapping("/{agentId}")
-    public Agent getAgent(@PathVariable("agentId") Integer id){
-        return adminService.getAgent(id);
+
+
+
+
+    @PutMapping("/update/{id}")
+    @PreAuthorize("hasAuthority('admin:update')")
+    public ResponseEntity<RegisterAgentResponse> updateUser(@PathVariable("id") Long id, @RequestBody AgentRequest updatedAgent)  {
+      return ResponseEntity.ok(service.updateAgent(id,updatedAgent));
     }
 
-    @DeleteMapping("/{agentId}")
-    public void deleteAgent(@PathVariable("agentId") Integer id){
-        adminService.deleteAgentById(id);
-    }
-    @PutMapping("/{agentId}")
-    public ResponseEntity<Agent> updateAgent(@PathVariable("agentId") Integer id, @RequestBody Agent agent) {
-        Agent updatedAgent = adminService.updateAgent(agent, id);
-        if (updatedAgent != null) {
-            return ResponseEntity.ok(updatedAgent);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
 
+
+
+
+
+    @DeleteMapping("/del")
+    @PreAuthorize("hasAuthority('admin:delete')")
+    @Hidden
+    public String delete() {
+        return "DELETE:: admin controller";
+    }
+
+    @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasAuthority('admin:delete')")
+    public RegisterAgentResponse deleteUser(@PathVariable("id") Long id)  {
+            return service.delete(id);
     }
 
 }
-
