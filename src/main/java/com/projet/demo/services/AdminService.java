@@ -1,16 +1,17 @@
 package com.projet.demo.services;
 
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.projet.demo.auth.AuthenticationResponse;
 import com.projet.demo.config.JwtService;
-import com.projet.demo.model.User;
-import com.projet.demo.model.Role;
+import com.projet.demo.entity.Client;
+import com.projet.demo.entity.Role;
 import com.projet.demo.model.AgentRequest;
 import com.projet.demo.model.RegisterAgentResponse;
-import com.projet.demo.repository.UserRepo;
-import com.projet.demo.model.Token;
-import com.projet.demo.repository.TokenRepo;
-import com.projet.demo.model.TokenType;
+import com.projet.demo.repository.ClientRepository;
+import com.projet.demo.token.Token;
+import com.projet.demo.token.TokenRepository;
+import com.projet.demo.token.TokenType;
 import com.vonage.client.VonageClient;
 import com.vonage.client.sms.SmsSubmissionResponse;
 import com.vonage.client.sms.messages.TextMessage;
@@ -23,6 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Random;
@@ -31,8 +33,8 @@ import java.util.Random;
 @Service
 @RequiredArgsConstructor
 public class AdminService {
-    private final UserRepo repository;
-    private final TokenRepo tokenRepo;
+    private final ClientRepository repository;
+    private final TokenRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
@@ -53,7 +55,7 @@ public class AdminService {
     }
 
 
-    private void saveAgentToken(User user, String jwtToken) {
+    private void saveAgentToken(Client user, String jwtToken) {
         var token = Token.builder()
                 .user(user)
                 .token(jwtToken)
@@ -61,7 +63,7 @@ public class AdminService {
                 .expired(false)
                 .revoked(false)
                 .build();
-        tokenRepo.save(token);
+        tokenRepository.save(token);
     }
     public RegisterAgentResponse registerAgent(AgentRequest request) {
         if (repository.existsByPhoneNumber(request.getPhoneNumber()) && repository.existsByEmail(request.getEmail())) {
@@ -69,7 +71,7 @@ public class AdminService {
 
         }
         String generatedPassword =generatePassword();
-        var Agent = User.builder()
+        var Agent = Client.builder()
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .address(request.getAddress())
@@ -94,7 +96,7 @@ public class AdminService {
     }
 
 
-    private void saveUserToken(User user, String jwtToken) {
+    private void saveUserToken(Client user, String jwtToken) {
         var token = Token.builder()
                 .user(user)
                 .token(jwtToken)
@@ -102,18 +104,18 @@ public class AdminService {
                 .expired(false)
                 .revoked(false)
                 .build();
-        tokenRepo.save(token);
+        tokenRepository.save(token);
     }
 
-    private void revokeAllUserTokens(User user) {
-        var validUserTokens = tokenRepo.findAllValidTokenByUser(user.getId());
+    private void revokeAllUserTokens(Client user) {
+        var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
         if (validUserTokens.isEmpty())
             return;
         validUserTokens.forEach(token -> {
             token.setExpired(true);
             token.setRevoked(true);
         });
-        tokenRepo.saveAll(validUserTokens);
+        tokenRepository.saveAll(validUserTokens);
     }
 
     public void refreshToken(
@@ -129,7 +131,7 @@ public class AdminService {
         refreshToken = authHeader.substring(7);
         userEmail = jwtService.extractUsername(refreshToken);
         if (userEmail != null) {
-            User user = (User) this.repository.findByEmail(userEmail)
+            Client user = (Client) this.repository.findByEmail(userEmail)
                     .orElseThrow();
             if (jwtService.isTokenValid(refreshToken, user)) {
                 var accessToken = jwtService.generateToken(user);
@@ -144,13 +146,13 @@ public class AdminService {
         }
     }
 
-    public List<User> findAll() {
-        List<User> users = repository.findAllAgentWithRoleClient();
+    public List<Client> findAll() {
+        List<Client> users = repository.findAllAgentWithRoleClient();
         return users;
     }
 
-    public User findById(Long id) {
-        User agent = repository.findAgentByClientId(id);
+    public Client findById(Long id) {
+        Client agent = repository.findAgentByClientId(id);
         return  agent;
     }
 
@@ -160,7 +162,7 @@ public class AdminService {
 
 
   public RegisterAgentResponse updateAgent(Long id , AgentRequest userUpdateRequest) {
-        User agent=
+        Client agent=
                repository.findAgentByClientId(id);
                        if(agent!=null) {
 
@@ -181,7 +183,7 @@ public class AdminService {
         }
 
     public RegisterAgentResponse delete(Long id) {
-        User agent = repository.findAgentByClientId(id);
+        Client agent = repository.findAgentByClientId(id);
         if(agent !=null){
             repository.delete(agent);
             return RegisterAgentResponse.builder().message("Deleted with Success").build();

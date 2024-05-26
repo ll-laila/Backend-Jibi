@@ -1,5 +1,6 @@
 package com.projet.demo.model;
 
+import com.projet.demo.entity.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

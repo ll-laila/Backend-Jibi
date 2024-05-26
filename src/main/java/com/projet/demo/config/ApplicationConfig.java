@@ -1,7 +1,6 @@
 package com.projet.demo.config;
 
-import com.projet.demo.model.User;
-import com.projet.demo.repository.UserRepo;
+import com.projet.demo.repository.ClientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,23 +18,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @RequiredArgsConstructor
 public class ApplicationConfig {
 
-  private final UserRepo repository;
+  private final ClientRepository repository;
 
- /* @Bean
-  public UserDetailsService userDetailsService() {
-    return username -> (UserDetails) repository.findByPhoneNumber(username)
-        .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-  }*/
   @Bean
-   public UserDetailsService userDetailsService() {
-     return username -> {
-       User user = repository.findByPhoneNumber(username);
-       if (user == null) {
-         throw new UsernameNotFoundException("User not found");
-       }
-       return user;
-     };
-   }
+  public UserDetailsService userDetailsService() {
+    return username -> (UserDetails) repository.findByEmail(username)
+        .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+  }
 
   @Bean
   public AuthenticationProvider authenticationProvider() {

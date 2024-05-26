@@ -1,9 +1,9 @@
 package com.projet.demo.controller;
 
-import com.projet.demo.model.User;
+import com.projet.demo.entity.Client;
 import com.projet.demo.model.AgentRequest;
 import com.projet.demo.model.RegisterAgentResponse;
-import com.projet.demo.repository.UserRepo;
+import com.projet.demo.repository.ClientRepository;
 import com.projet.demo.services.AdminService;
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
@@ -21,18 +21,18 @@ import java.util.List;
 
 public class AdminController {
     private final AdminService service;
-    private final UserRepo userRepository;
+    private final ClientRepository userRepository;
 
     @GetMapping("/list")
    @PreAuthorize("hasAuthority('admin:read')")
-    public List<User> get() {
+    public List<Client> get() {
         return service.findAll();
     }
 
     @GetMapping("/agent/{id}")
     @PreAuthorize("hasAuthority('admin:read')")
-    public User getById(@PathVariable("id") Long id) {
-        User agent = service.findById(id);
+    public Client getById(@PathVariable("id") Long id) {
+        Client agent = service.findById(id);
         return agent;
     }
 

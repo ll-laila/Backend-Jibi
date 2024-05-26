@@ -1,6 +1,6 @@
 package com.projet.demo.config;
 
-import com.projet.demo.model.User;
+import com.projet.demo.entity.Client;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -21,10 +21,8 @@ public class JwtService {
 
   @Value("${application.security.jwt.secret-key}")
   private String secretKey;
-
   @Value("${application.security.jwt.expiration}")
   private long jwtExpiration;
-
   @Value("${application.security.jwt.refresh-token.expiration}")
   private long refreshExpiration;
 
@@ -41,21 +39,37 @@ public class JwtService {
     return generateToken(new HashMap<>(), userDetails);
   }
 
-  public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+  public String generateToken(
+      Map<String, Object> extraClaims,
+      UserDetails userDetails
+  ) {
     return buildToken(extraClaims, userDetails, jwtExpiration);
   }
 
-  public String generateRefreshToken(UserDetails userDetails) {
+  public String generateRefreshToken(
+      UserDetails userDetails
+  ) {
     return buildToken(new HashMap<>(), userDetails, refreshExpiration);
   }
 
-  private String buildToken(Map<String, Object> extraClaims, UserDetails userDetails, long expiration) {
-    User user = (User) userDetails; // Cast UserDetails to User
+  private String buildToken(
+          Map<String, Object> extraClaims,
+          UserDetails userDetails,
+          long expiration
+  ) {
+    Client user = (Client) userDetails; // Cast UserDetails to User
     extraClaims.put("role", user.getRole());
-    extraClaims.put("id", user.getId());
-    extraClaims.put("isFirstLogin", user.getIsFirstLogin());
+    extraClaims.put("id" ,user.getId());
+   extraClaims.put("isFirstLogin" ,user.getIsFirstLogin());
+//    extraClaims.put("phoneNumber",user.getPhoneNumber());
+//    extraClaims.put("isFirstLogin",user.getIsFirstLogin());
+//    extraClaims.put("isPaymentAccountActivated",user.getIsPaymentAccountActivated());
 
-    return Jwts.builder()
+
+
+
+    return Jwts
+            .builder()
             .setClaims(extraClaims)
             .setSubject(userDetails.getUsername())
             .setIssuedAt(new Date(System.currentTimeMillis()))
@@ -79,11 +93,11 @@ public class JwtService {
 
   private Claims extractAllClaims(String token) {
     return Jwts
-            .parserBuilder()
-            .setSigningKey(getSignInKey())
-            .build()
-            .parseClaimsJws(token)
-            .getBody();
+        .parserBuilder()
+        .setSigningKey(getSignInKey())
+        .build()
+        .parseClaimsJws(token)
+        .getBody();
   }
 
   private Key getSignInKey() {

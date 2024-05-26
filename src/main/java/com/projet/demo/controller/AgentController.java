@@ -1,6 +1,6 @@
 package com.projet.demo.controller;
 
-import com.projet.demo.model.User;
+import com.projet.demo.entity.Client;
 import com.projet.demo.model.ClientRequest;
 import com.projet.demo.model.RegisterAgentResponse;
 import com.projet.demo.services.AgentService;
@@ -21,20 +21,39 @@ import java.util.List;
 public class AgentController {
 
 private  final AgentService service;
+    @Operation(
+            description = "Get endpoint for Agent",
+            summary = "This is a summary for management get endpoint",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized / Invalid Token",
+                            responseCode = "403"
+                    )
+            }
+
+    )
+
+
+
+
 
     @GetMapping("/list")
     @PreAuthorize("hasAuthority('agent:read')")
-    public List<User> getAllClient() {
+    public List<Client> getAllClient() {
         return service.findAll();
     }
 
     @GetMapping("/client/{id}")
     @PreAuthorize("hasAuthority('agent:read')")
-    public User getById(@PathVariable("id") Long id) {
+    public Client getById(@PathVariable("id") Long id) {
         // Logic to find user by ID
-        User User = service.findById(id);
+        Client Client = service.findById(id);
         // Return the found user or handle the case where user is not found
-        return User;
+        return Client;
     }
 
 
