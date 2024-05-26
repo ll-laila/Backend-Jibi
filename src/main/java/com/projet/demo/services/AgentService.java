@@ -1,14 +1,14 @@
 package com.projet.demo.services;
 
 import com.projet.demo.config.JwtService;
-import com.projet.demo.model.User;
-import com.projet.demo.model.Role;
+import com.projet.demo.entity.Client;
+import com.projet.demo.entity.Role;
 import com.projet.demo.model.ClientRequest;
 import com.projet.demo.model.RegisterAgentResponse;
-import com.projet.demo.repository.UserRepo;
-import com.projet.demo.model.Token;
-import com.projet.demo.repository.TokenRepo;
-import com.projet.demo.model.TokenType;
+import com.projet.demo.repository.ClientRepository;
+import com.projet.demo.token.Token;
+import com.projet.demo.token.TokenRepository;
+import com.projet.demo.token.TokenType;
 import com.vonage.client.VonageClient;
 import com.vonage.client.sms.SmsSubmissionResponse;
 import com.vonage.client.sms.messages.TextMessage;
@@ -25,8 +25,8 @@ import java.util.Random;
 @RequiredArgsConstructor
 public class AgentService {
 
-    private final UserRepo repository;
-    private final TokenRepo tokenRepo;
+    private final ClientRepository repository;
+    private final TokenRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final String BRAND_NAME = "NXSMS";
@@ -53,7 +53,7 @@ public class AgentService {
         }
 
         String generatedpassword = generatePassword();
-        var Clinet = User.builder()
+        var Clinet = Client.builder()
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .email(request.getEmail())
@@ -74,12 +74,12 @@ public class AgentService {
         TextMessage message = new TextMessage(BRAND_NAME, request.getPhoneNumber(), "Your password is : " + generatedpassword);
         SmsSubmissionResponse response = vonageClient.getSmsClient().submitMessage(message);
         saveUserToken(savedAgent, jwtToken);
-        return RegisterAgentResponse.builder().message("success " + generatedpassword).build();
+        return RegisterAgentResponse.builder().message("success your  message is: " + generatedpassword).build();
     }
 
 
 
-    private void saveUserToken(User user, String jwtToken) {
+    private void saveUserToken(Client user, String jwtToken) {
         var token = Token.builder()
                 .user(user)
                 .token(jwtToken)
@@ -87,41 +87,41 @@ public class AgentService {
                 .expired(false)
                 .revoked(false)
                 .build();
-        tokenRepo.save(token);
+        tokenRepository.save(token);
     }
 
 
     public RegisterAgentResponse updateClient(Long id , ClientRequest clientRequest) {
-        User user =
+        Client client=
                 repository.findClientByClientId(id);
-                     if(user !=null) {
-                         user.setFirstName(clientRequest.getFirstName());
-                         user.setLastName(clientRequest.getLastName());
-                         user.setEmail(clientRequest.getEmail());
-                         user.setAddress(clientRequest.getAddress());
-                         user.setCIN(clientRequest.getCIN());
-                         user.setPhoneNumber(clientRequest.getPhoneNumber());
+                     if(client!=null) {
+                         client.setFirstName(clientRequest.getFirstName());
+                         client.setLastName(clientRequest.getLastName());
+                         client.setEmail(clientRequest.getEmail());
+                         client.setAddress(clientRequest.getAddress());
+                         client.setCIN(clientRequest.getCIN());
+                         client.setPhoneNumber(clientRequest.getPhoneNumber());
 
 
-                         repository.save(user);
-                     }else {System.out.println("The User with the given Id not exist in the database");}
+                         repository.save(client);
+                     }else {System.out.println("The Client with the given Id not exist in the database");}
         return RegisterAgentResponse.builder().message("Agent updated successfully").build();
     }
 
 
-    public List<User> findAll() {
-        List<User> users = repository.findAllClientsWithRoleClient();
-        return users;
+    public List<Client> findAll() {
+        List<Client> clients = repository.findAllClientsWithRoleClient();
+        return clients;
     }
-    public User findById(Long id) {
-        User user = repository.findClientByClientId(id);
-        return user;
+    public Client findById(Long id) {
+        Client client = repository.findClientByClientId(id);
+        return  client;
     }
 
     public RegisterAgentResponse deleteClient(Long id) {
-        User user = repository.findClientByClientId(id);
-        if(user !=null){
-            repository.delete(user);
+        Client client = repository.findClientByClientId(id);
+        if(client !=null){
+            repository.delete(client);
             return   RegisterAgentResponse.builder().message("Deleted with Success").build();
         }else {
 

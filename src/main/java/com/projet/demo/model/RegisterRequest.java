@@ -1,5 +1,6 @@
 package com.projet.demo.model;
 
+import com.projet.demo.entity.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,7 +14,7 @@ public class RegisterRequest {
 
   private String firstname;
   private String lastname;
-  private String phoneNumber;
+  private String email;
   private String password;
   private Role role;
 }

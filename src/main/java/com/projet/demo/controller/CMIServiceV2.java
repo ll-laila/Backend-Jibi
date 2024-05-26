@@ -1,8 +1,8 @@
 package com.projet.demo.controller;
 
-import com.projet.demo.model.BankAccount;
-import com.projet.demo.model.User;
-import com.projet.demo.model.PaymentAccount;
+import com.projet.demo.entity.BankAccount;
+import com.projet.demo.entity.Client;
+import com.projet.demo.entity.PaymentAccount;
 import com.projet.demo.model.OpenPaymentAccountResponse;
 import com.projet.demo.model.OpenPaymentAccountTransactionRequest;
 import com.projet.demo.repository.*;
@@ -23,31 +23,31 @@ import java.time.LocalDate;
 public class CMIServiceV2 {
 
     @Autowired
-    BankAccountRepo bankAccountRepo;
+    BankAccountRepository bankAccountRepository;
     @Autowired
-    private PaymentAccountRepo paymentAccountRepo;
+    private PaymentAccountRepository paymentAccountRepository;
     @Autowired
-    private TransactionRepo transactionRepo;
+    private TransactionRepository transactionRepository;
     @Autowired
     private VonageClient vonageClient;
     @Autowired
     private CreditorService creditorService;
     @Autowired
-    CustomerOrderRepo customerOrderRepo;
+    CustomerOrderRepository customerOrderRepository;
     @Autowired
-    OrderItemRepo orderItemRepo;
+    OrderItemRepository orderItemRepository;
     @Autowired
-    DeliveryRepo deliveryRepository;
+    DeliveryRepository deliveryRepository;
     @Autowired
-    UserRepo userRepo;
+    ClientRepository clientRepository;
     @PreAuthorize("hasAuthority('agent:create')")
     @PostMapping("/openPaymentAccount/{clientId}")
     public ResponseEntity<OpenPaymentAccountResponse> openPaymentAccount(@PathVariable("clientId") long clientId, @RequestBody OpenPaymentAccountTransactionRequest request) {
-        User user = userRepo.findById(clientId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
+        Client client = clientRepository.findById(clientId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid client ID"));
 
-        String cni = user.getCIN();
-        BankAccount bankAccount = bankAccountRepo.findByClientCni(cni);
+        String cni = client.getCIN();
+        BankAccount bankAccount = bankAccountRepository.findByClientCni(cni);
 
         double accountBalance = bankAccount.getBalance();
 
@@ -59,14 +59,14 @@ public class CMIServiceV2 {
                     .bankName("CIH")
                     .createdDate(currentDate)
                     .build();
-            paymentAccountRepo.save(paymentAccount);
+            paymentAccountRepository.save(paymentAccount);
             long paymentAccountId =paymentAccount.getPaymentAccountId();
 
-            user.setIsPaymentAccountActivated(true);
-            user.setPaymentAccount(paymentAccount);
+            client.setIsPaymentAccountActivated(true);
+            client.setPaymentAccount(paymentAccount);
 
 
-            userRepo.save(user);
+            clientRepository.save(client);
 
 
 

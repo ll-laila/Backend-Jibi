@@ -4,7 +4,7 @@ import com.projet.demo.auth.AuthenticationRequest;
 import com.projet.demo.auth.AuthenticationResponse;
 import com.projet.demo.auth.AuthenticationService;
 import com.projet.demo.model.RegisterRequest;
-import com.projet.demo.repository.UserRepo;
+import com.projet.demo.repository.ClientRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ import java.io.IOException;
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 public class AuthenticationController {
-  private final UserRepo repository;
+  private final ClientRepository repository;
 
   private final AuthenticationService service;
 
@@ -58,7 +58,7 @@ public class AuthenticationController {
 //  private static final long RESET_PASSWORD_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24; // 24 hours
 //  @PostMapping("/forgot-password")
 //  public ResponseEntity<?> forgotPassword(@RequestParam("phoneNumber") String phoneNumber , @RequestParam("newPassword") String newPassword) {
-//    User user = repository.findByPhoneNumber(phoneNumber);
+//    Client user = repository.findByPhoneNumber(phoneNumber);
 //    if (user == null) {
 //      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User not found");
 //    }
@@ -80,13 +80,13 @@ public class AuthenticationController {
 //  public ResponseEntity<?> resetPassword( @RequestParam("newPassword") String newPassword) {
 //    // Validate the token and extract the user ID
 ////    String verificationCode = validateResetPasswordToken(token);
-//    User user
+//    Client user
 //            = repository.
 ////    if (userId == null) {
 ////      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid or expired token");
 ////    }//
 ////    // Find the user by ID
-////    User user = repository.findById(userId);
+////    Client user = repository.findById(userId);
 ////    if (user == null) {
 ////      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User not found");
 ////    }

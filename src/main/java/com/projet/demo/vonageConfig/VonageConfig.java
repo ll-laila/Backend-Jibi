@@ -7,10 +7,10 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class VonageConfig {
-    @Value("${vonage.apiKey}")
+    @Value("2053ed34")
     private String apiKey;
 
-    @Value("${vonage.apiSecret}")
+    @Value("j2Cy3qjnDhKlnCbi")
     private String apiSecret;
     @Bean
     public VonageClient vonageClient() {
