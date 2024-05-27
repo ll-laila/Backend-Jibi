@@ -22,25 +22,23 @@ import java.util.List;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "paymentAccountId")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class PaymentAccount {
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long paymentAccountId;
-    @JsonManagedReference
-    @OneToOne(mappedBy = "paymentAccount", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonIgnoreProperties({"hibernateLazyInitializer"}) // Add this line
-    private Client client;
 
     private double accountBalance;
 
-    @Column(name = "created_date")
-    private LocalDate createdDate;
+    private String type;
+
+
+    @JsonManagedReference
+    @OneToOne(mappedBy = "paymentAccount", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"hibernateLazyInitializer"})
+    private Client client;
 
     private String bankName;
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "paymentAccountId")
-    @JsonIgnoreProperties({"hibernateLazyInitializer"}) // Add this line
-    private List<Transaction> transactions = new ArrayList<>();
 
-    private String verificationCode;
+
 }
 

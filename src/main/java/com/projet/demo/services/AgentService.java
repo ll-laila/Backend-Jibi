@@ -57,16 +57,12 @@ public class AgentService {
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .email(request.getEmail())
-                .address(request.getAddress())
                 .phoneNumber(request.getPhoneNumber())
                 .password(passwordEncoder.encode(generatedpassword))
-                .CIN(request.getCIN())
                 .isFirstLogin(true)
                 .role(Role.CLIENT)
                 .isPaymentAccountActivated(false)
                 .createdDate(LocalDate.now())
-                .isPaymentAccountActivated(false)
-                .birthDate(request.getBirthDate())
                 .build();
         var savedAgent = repository.save(Clinet);
         var jwtToken = jwtService.generateToken(Clinet);
