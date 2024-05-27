@@ -1,5 +1,6 @@
 package com.projet.demo.config;
 
+import com.projet.demo.entity.Client;
 import com.projet.demo.repository.ClientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +15,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Optional;
+
 @Configuration
 @RequiredArgsConstructor
 public class ApplicationConfig {
@@ -22,8 +25,10 @@ public class ApplicationConfig {
 
   @Bean
   public UserDetailsService userDetailsService() {
-    return username -> (UserDetails) repository.findByEmail(username)
-        .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    return username -> {
+      Optional<Client> client = repository.findByPhoneNumber(username);
+      return client.orElseThrow(() -> new UsernameNotFoundException("User not found with phone number: " + username));
+    };
   }
 
   @Bean
@@ -43,5 +48,4 @@ public class ApplicationConfig {
   public PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
   }
-
 }

@@ -16,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -45,18 +46,17 @@ public class ClientServiceImpl implements ClientService {
                 .phoneNumber(client.getPhoneNumber()).email(client.getEmail()).address(client.getAddress()).build();  }
 
     public RegisterAgentResponse changePassword(ClientRequest request) {
-
-        Client client = clientRepository.findByPhoneNumber(request.getPhoneNumber());
-        if (!(client == null) ) {
-             client.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        Optional<Client> optionalClient = clientRepository.findByPhoneNumber(request.getPhoneNumber());
+        if (optionalClient.isPresent()) {
+            Client client = optionalClient.get();
+            client.setPassword(passwordEncoder.encode(request.getNewPassword()));
             client.setIsFirstLogin(false);
             clientRepository.save(client);
             return RegisterAgentResponse.builder().message("Password updated successfully").build();
-            } else {
+        } else {
             return RegisterAgentResponse.builder().message("Client not found").build();
-            }
         }
-
+    }
 
 
     @Override
@@ -98,15 +98,13 @@ public class ClientServiceImpl implements ClientService {
             return null;
         }
 
+
         @Override
         public ClientProfileResponse getClientByPhoneNumber(String phoneNumber) {
-            Client client = clientRepository.findByPhoneNumber(phoneNumber);
-            if (client != null) {
-                return ClientMapper.ConvertToDto(client);
-            }
-            return null;
+            return clientRepository.findByPhoneNumber(phoneNumber)
+                    .map(ClientMapper::ConvertToDto)
+                    .orElse(null);
         }
-
 
 
 

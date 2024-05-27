@@ -26,7 +26,7 @@ public class JwtService {
   @Value("${application.security.jwt.refresh-token.expiration}")
   private long refreshExpiration;
 
-  public String extractUsername(String token) {
+  public String extractPhoneNumber(String token) {
     return extractClaim(token, Claims::getSubject);
   }
 
@@ -61,6 +61,7 @@ public class JwtService {
     extraClaims.put("role", user.getRole());
     extraClaims.put("id" ,user.getId());
    extraClaims.put("isFirstLogin" ,user.getIsFirstLogin());
+    extraClaims.put("phoneNumber", user.getPhoneNumber());
 //    extraClaims.put("phoneNumber",user.getPhoneNumber());
 //    extraClaims.put("isFirstLogin",user.getIsFirstLogin());
 //    extraClaims.put("isPaymentAccountActivated",user.getIsPaymentAccountActivated());
@@ -71,7 +72,7 @@ public class JwtService {
     return Jwts
             .builder()
             .setClaims(extraClaims)
-            .setSubject(userDetails.getUsername())
+            .setSubject(user.getPhoneNumber())
             .setIssuedAt(new Date(System.currentTimeMillis()))
             .setExpiration(new Date(System.currentTimeMillis() + expiration))
             .signWith(getSignInKey(), SignatureAlgorithm.HS256)
@@ -79,8 +80,8 @@ public class JwtService {
   }
 
   public boolean isTokenValid(String token, UserDetails userDetails) {
-    final String username = extractUsername(token);
-    return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
+    final String phoneNumber = extractPhoneNumber(token);
+    return (phoneNumber.equals(((Client) userDetails).getPhoneNumber())) && !isTokenExpired(token);
   }
 
   private boolean isTokenExpired(String token) {
