@@ -10,10 +10,10 @@ import com.projet.demo.token.Token;
 import com.projet.demo.token.TokenRepository;
 import com.projet.demo.token.TokenType;
 import com.vonage.client.VonageClient;
+import com.vonage.client.sms.MessageStatus;
 import com.vonage.client.sms.SmsSubmissionResponse;
 import com.vonage.client.sms.messages.TextMessage;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -29,20 +29,21 @@ public class AgentService {
     private final TokenRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
-    private final String BRAND_NAME = "NXSMS";
-    @Autowired
-    private VonageClient vonageClient;
-    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    private static final String CHARACTERS = "0123456789";
     public static String generatePassword() {
         StringBuilder password = new StringBuilder();
         Random random = new Random();
 
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 6; i++) {
             int index = random.nextInt(CHARACTERS.length());
             password.append(CHARACTERS.charAt(index));
         }
-
         return password.toString();
+    }
+    public String formatPhoneNumber(String phoneNumber) {
+
+        String formatted = phoneNumber.substring(1);
+        return "212" + formatted;
     }
 
 
@@ -52,13 +53,13 @@ public class AgentService {
             throw new RuntimeException("Email Or Phone already exists");
         }
 
-        String generatedpassword = generatePassword();
+        String generatedPassword =generatePassword();
         var Clinet = Client.builder()
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .email(request.getEmail())
                 .phoneNumber(request.getPhoneNumber())
-                .password(passwordEncoder.encode(generatedpassword))
+                .password(passwordEncoder.encode(generatedPassword))
                 .isFirstLogin(true)
                 .role(Role.CLIENT)
                 .isPaymentAccountActivated(false)
@@ -66,13 +67,24 @@ public class AgentService {
                 .build();
         var savedAgent = repository.save(Clinet);
         var jwtToken = jwtService.generateToken(Clinet);
-        //  var refreshToken = jwtService.generateRefreshToken(Agent);
-        TextMessage message = new TextMessage(BRAND_NAME, request.getPhoneNumber(), "Your password is : " + generatedpassword);
-        SmsSubmissionResponse response = vonageClient.getSmsClient().submitMessage(message);
-        saveUserToken(savedAgent, jwtToken);
-        return RegisterAgentResponse.builder().message("success " + generatedpassword).build();
-    }
 
+        String formattedPhoneNumber=formatPhoneNumber(request.getPhoneNumber());
+        VonageClient client = VonageClient.builder().apiKey("2053ed34").apiSecret("j2Cy3qjnDhKlnCbi").build();
+        System.out.println(client);
+        TextMessage message = new TextMessage("Jibi LKLCF",
+                formattedPhoneNumber,
+                "Bonjour "+ request.getFirstName() + ", votre mot de passe est "+ generatedPassword + "."
+        );
+        SmsSubmissionResponse response = client.getSmsClient().submitMessage(message);
+        if (response.getMessages().get(0).getStatus() == MessageStatus.OK) {
+            System.out.println("Message sent successfully.");
+        } else {
+            System.out.println("Message failed with error: " + response.getMessages().get(0).getErrorText());
+        }
+
+        saveUserToken(savedAgent, jwtToken);
+        return RegisterAgentResponse.builder().message("success " + generatedPassword).build();
+    }
 
 
     private void saveUserToken(Client user, String jwtToken) {
@@ -85,7 +97,6 @@ public class AgentService {
                 .build();
         tokenRepository.save(token);
     }
-
 
     public RegisterAgentResponse updateClient(Long id , ClientRequest clientRequest) {
         Client client=
@@ -106,12 +117,10 @@ public class AgentService {
 
 
     public List<Client> findAll() {
-        List<Client> clients = repository.findAllClientsWithRoleClient();
-        return clients;
+        return repository.findAllClientsWithRoleClient();
     }
     public Client findById(Long id) {
-        Client client = repository.findClientByClientId(id);
-        return  client;
+        return repository.findAgentByClientId(id);
     }
 
     public RegisterAgentResponse deleteClient(Long id) {

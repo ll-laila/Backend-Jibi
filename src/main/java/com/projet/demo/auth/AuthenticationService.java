@@ -43,13 +43,14 @@ public class AuthenticationService {
   private final AuthenticationManager authenticationManager;
 
   public AuthenticationResponse register(RegisterRequest request) {
-    if (repository.existsByEmail(request.getEmail())) {
-      throw new RuntimeException("Email already exists");
+    if (repository.existsByEmail(request.getEmail()) || repository.existsByPhoneNumber(request.getPhoneNumber())) {
+      throw new RuntimeException("Email or phone number already exists");
     }
     var user = Client.builder()
         .firstName(request.getFirstname())
         .lastName(request.getLastname())
         .email(request.getEmail())
+        .phoneNumber(request.getPhoneNumber())
         .password(passwordEncoder.encode(request.getPassword()))
         .role(Role.ADMIN)
         .build();
@@ -66,16 +67,13 @@ public class AuthenticationService {
   public AuthenticationResponse authenticate(AuthenticationRequest request) {
     authenticationManager.authenticate(
         new UsernamePasswordAuthenticationToken(
-            request.getEmail(),
+            request.getPhoneNumber(),
             request.getPassword()
         )
     );
-    UserDetails user = (UserDetails) repository.findByEmail(request.getEmail())
-        .orElseThrow();
+    UserDetails user = (UserDetails) repository.findByPhoneNumber(request.getPhoneNumber());
     var jwtToken = jwtService.generateToken(user);
     var refreshToken = jwtService.generateRefreshToken(user);
-
-
 
     revokeAllUserTokens((Client) user);
     saveUserToken((Client) user, jwtToken);
@@ -113,15 +111,14 @@ public class AuthenticationService {
   ) throws IOException {
     final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
     final String refreshToken;
-    final String userEmail;
+    final String userPhoneNumber;
     if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
       return;
     }
     refreshToken = authHeader.substring(7);
-    userEmail = jwtService.extractUsername(refreshToken);
-    if (userEmail != null) {
-      var user = this.repository.findByEmail(userEmail)
-              .orElseThrow();
+    userPhoneNumber = jwtService.extractUsername(refreshToken);
+    if (userPhoneNumber != null) {
+      var user = this.repository.findByPhoneNumber(userPhoneNumber);
       if (jwtService.isTokenValid(refreshToken, (UserDetails) user)) {
         var accessToken = jwtService.generateToken((UserDetails) user);
         revokeAllUserTokens((Client) user);

@@ -1,8 +1,6 @@
 package com.projet.demo.services;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.projet.demo.auth.AuthenticationResponse;
 import com.projet.demo.config.JwtService;
 import com.projet.demo.entity.Client;
 import com.projet.demo.entity.Role;
@@ -13,23 +11,17 @@ import com.projet.demo.token.Token;
 import com.projet.demo.token.TokenRepository;
 import com.projet.demo.token.TokenType;
 import com.vonage.client.VonageClient;
+import com.vonage.client.sms.MessageStatus;
 import com.vonage.client.sms.SmsSubmissionResponse;
 import com.vonage.client.sms.messages.TextMessage;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
-
-
-import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
-@CrossOrigin(origins = "http://localhost:4200") // Allow requests from Angular app's origin
+@CrossOrigin(origins = "http://localhost:4200")
 @Service
 @RequiredArgsConstructor
 public class AdminService {
@@ -38,15 +30,12 @@ public class AdminService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
-    private final String BRAND_NAME = "NXSMS";
-    @Autowired
-    private VonageClient vonageClient;
-    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    private static final String CHARACTERS = "0123456789";
     public static String generatePassword() {
         StringBuilder password = new StringBuilder();
         Random random = new Random();
 
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 6; i++) {
             int index = random.nextInt(CHARACTERS.length());
             password.append(CHARACTERS.charAt(index));
         }
@@ -54,17 +43,6 @@ public class AdminService {
         return password.toString();
     }
 
-
-    private void saveAgentToken(Client user, String jwtToken) {
-        var token = Token.builder()
-                .user(user)
-                .token(jwtToken)
-                .tokenType(TokenType.BEARER)
-                .expired(false)
-                .revoked(false)
-                .build();
-        tokenRepository.save(token);
-    }
     public RegisterAgentResponse registerAgent(AgentRequest request) {
         if (repository.existsByPhoneNumber(request.getPhoneNumber()) && repository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("Phone num already exists Or Email");
@@ -83,18 +61,33 @@ public class AdminService {
                 .role(Role.AGENT)
                 .build();
 
-
-
-
+        String formattedPhoneNumber=formatPhoneNumber(request.getPhoneNumber());
+        System.out.println(formattedPhoneNumber);
         var savedAgent = repository.save(Agent);
         var jwtToken = jwtService.generateToken(Agent);
 
         saveUserToken(savedAgent, jwtToken);
-        TextMessage message = new TextMessage(BRAND_NAME, request.getPhoneNumber(), "Your password is : " + generatedPassword);
-        SmsSubmissionResponse response = vonageClient.getSmsClient().submitMessage(message);
+
+        VonageClient client = VonageClient.builder().apiKey("2053ed34").apiSecret("j2Cy3qjnDhKlnCbi").build();
+        System.out.println(client);
+        TextMessage message = new TextMessage("Jibi LKLCF",
+                formattedPhoneNumber,
+                "Bonjour "+ request.getFirstName() + ", votre mot de passe est "+ generatedPassword + "."
+        );
+        SmsSubmissionResponse response = client.getSmsClient().submitMessage(message);
+        if (response.getMessages().get(0).getStatus() == MessageStatus.OK) {
+            System.out.println("Message sent successfully.");
+        } else {
+            System.out.println("Message failed with error: " + response.getMessages().get(0).getErrorText());
+        }
         return RegisterAgentResponse.builder().message("success"+generatedPassword).build();
     }
 
+    public String formatPhoneNumber(String phoneNumber) {
+
+        String formatted = phoneNumber.substring(1);
+        return "212" + formatted;
+    }
 
     private void saveUserToken(Client user, String jwtToken) {
         var token = Token.builder()
@@ -118,7 +111,7 @@ public class AdminService {
         tokenRepository.saveAll(validUserTokens);
     }
 
-    public void refreshToken(
+    /*public void refreshToken(
             HttpServletRequest request,
             HttpServletResponse response
     ) throws IOException {
@@ -144,21 +137,15 @@ public class AdminService {
                 new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
             }
         }
-    }
+    }*/
 
     public List<Client> findAll() {
-        List<Client> users = repository.findAllAgentWithRoleClient();
-        return users;
+        return repository.findAllAgentWithRoleClient();
     }
 
     public Client findById(Long id) {
-        Client agent = repository.findAgentByClientId(id);
-        return  agent;
+        return repository.findAgentByClientId(id);
     }
-
-
-
-
 
 
   public RegisterAgentResponse updateAgent(Long id , AgentRequest userUpdateRequest) {
@@ -189,8 +176,8 @@ public class AdminService {
             return RegisterAgentResponse.builder().message("Deleted with Success").build();
         }else {
             return RegisterAgentResponse.builder().message("Error during Deleting").build();
-
-        }}
+        }
+    }
 
 }
 
