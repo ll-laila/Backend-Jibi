@@ -20,4 +20,5 @@ public class ClientRequest {
     private String newPassword;
     private Role role;
 
+
 }

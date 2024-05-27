@@ -12,8 +12,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AgentRequest {
     private Integer id;
-
-//    private MultipartFile photo;
     private String firstName;
     private String lastName ;
     private String address ;
@@ -22,5 +20,5 @@ public class AgentRequest {
     private String CommercialRn ;
     private String patentNumber ;
     private String password ;
-
+    //private String image;
 }

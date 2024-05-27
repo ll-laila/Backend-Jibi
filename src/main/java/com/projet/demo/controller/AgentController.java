@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/v1/client")
 @RequiredArgsConstructor
@@ -36,8 +36,6 @@ private  final AgentService service;
             }
 
     )
-
-
 
 
 
@@ -77,4 +75,6 @@ private  final AgentService service;
 
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasAuthority('agent:delete')")
-    public RegisterAgentResponse deleteClient(@PathVariable("id") Long id) { return service.deleteClient(id);}}
+    public RegisterAgentResponse deleteClient(@PathVariable("id") Long id) { return service.deleteClient(id);
+    }
+}

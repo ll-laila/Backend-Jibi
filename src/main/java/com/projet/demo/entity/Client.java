@@ -37,19 +37,16 @@ public class Client  implements UserDetails {
     private String phoneNumber;
     @JsonIgnore
     private String password;
-
-
     private Boolean isFirstLogin ;
-
     private LocalDate createdDate;
 
 
     private String CommercialRn ;
     private String patentNumber ;
     private Boolean isPaymentAccountActivated ;
-
     private String verificationCode;
-   private String VerificationCodeCreatedAt;
+    private String VerificationCodeCreatedAt;
+    private String image;
 
 
     @JsonManagedReference
@@ -57,20 +54,17 @@ public class Client  implements UserDetails {
     @JoinColumn(name = "paymentAccountId", referencedColumnName = "paymentAccountId")
     private PaymentAccount paymentAccount;
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
-    private List<BankAccount> bankAccounts = new ArrayList<>();
+    @OneToOne
+    private BankAccount bankAccount;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "bank_id")
-    private Bank bank;
+    @OneToMany(mappedBy = "client")
+    private List<Operation> operations;
+
 
     @Enumerated(EnumType.STRING)
     private Role role;
-    @JsonIgnore
-    public List<BankAccount> getBankAccounts() {
-        return bankAccounts;
-    }
+
+
 
     @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)

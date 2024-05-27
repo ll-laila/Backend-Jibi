@@ -10,8 +10,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AgentResposne {
+    private Long id;
     private String firstname;
     private String lastname;
     private String email;
+    private String address ;
+    private String phoneNumber ;
     private String password;
+    private String image;
 }

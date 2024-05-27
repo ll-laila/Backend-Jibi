@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.Date;
 
 
-@CrossOrigin(origins = "http://localhost:4200") // Allow requests from Angular app's origin
+@CrossOrigin(origins = "*") // Allow requests from Angular app's origin
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor

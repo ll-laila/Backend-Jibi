@@ -30,7 +30,4 @@ public class BankAccount {
         this.id = id;
     }
 
-    public Long getId() {
-        return id;
-    }
 }
