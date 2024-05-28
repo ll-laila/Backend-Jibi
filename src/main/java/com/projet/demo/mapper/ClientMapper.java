@@ -11,7 +11,6 @@ public class ClientMapper {
                 .firstName(client.getFirstName())
                 .lastName(client.getLastName())
                 .email(client.getEmail())
-                .CIN(client.getCIN())
                 .phoneNumber(client.getPhoneNumber())
                 .build();
     }

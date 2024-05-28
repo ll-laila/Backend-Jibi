@@ -9,10 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ClientProfileResponse {
+public class PaymentAccountRequest {
+
     private Long id;
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String phoneNumber;
+    private double balance;
+    private String type;
 }

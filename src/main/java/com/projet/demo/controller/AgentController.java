@@ -2,11 +2,13 @@ package com.projet.demo.controller;
 
 import com.projet.demo.entity.Client;
 import com.projet.demo.model.ClientRequest;
+import com.projet.demo.model.PaymentAccountRequest;
 import com.projet.demo.model.RegisterAgentResponse;
 import com.projet.demo.services.AgentService;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -59,9 +61,16 @@ private  final AgentService service;
     @PreAuthorize("hasAuthority('agent:create')")
     @Hidden
     public ResponseEntity<RegisterAgentResponse> registerClient(
-            @RequestBody ClientRequest request
+            @RequestBody ClientRegistrationRequest registrationRequest
     ) {
-        return ResponseEntity.ok(service.registerClient(request));
+        return ResponseEntity.ok(service.registerClient(registrationRequest.getClientRequest(), registrationRequest.getPaymentAccountRequest()));
+    }
+
+    @Data
+    static class ClientRegistrationRequest {
+        private ClientRequest clientRequest;
+        private PaymentAccountRequest paymentAccountRequest;
+
     }
 
 

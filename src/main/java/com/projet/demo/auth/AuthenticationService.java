@@ -31,7 +31,7 @@ public class AuthenticationService {
   private final AuthenticationManager authenticationManager;
 
   public AuthenticationResponse register(RegisterRequest request) {
-    if (repository.existsByEmail(request.getEmail()) || repository.existsByPhoneNumber(request.getPhoneNumber())) {
+    if (repository.existsByEmail(request.getEmail()) || repository.existsByPhoneNumber(request.getPhoneNumber())){
       throw new RuntimeException("Email or phone number already exists");
     }
     var user = Client.builder()

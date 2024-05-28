@@ -1,11 +1,17 @@
 package com.projet.demo.services;
 
 import com.projet.demo.config.JwtService;
+import com.projet.demo.entity.BankAccount;
 import com.projet.demo.entity.Client;
+import com.projet.demo.entity.PaymentAccount;
 import com.projet.demo.entity.Role;
+import com.projet.demo.model.AgentRequest;
 import com.projet.demo.model.ClientRequest;
+import com.projet.demo.model.PaymentAccountRequest;
 import com.projet.demo.model.RegisterAgentResponse;
+import com.projet.demo.repository.BankAccountRepository;
 import com.projet.demo.repository.ClientRepository;
+import com.projet.demo.repository.PaymentAccountRepository;
 import com.projet.demo.token.Token;
 import com.projet.demo.token.TokenRepository;
 import com.projet.demo.token.TokenType;
@@ -26,6 +32,8 @@ import java.util.Random;
 public class AgentService {
 
     private final ClientRepository repository;
+    private final PaymentAccountRepository paymentRepository;
+    private final BankAccountRepository bankRepository;
     private final TokenRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
@@ -46,29 +54,42 @@ public class AgentService {
         return "212" + formatted;
     }
 
+    public RegisterAgentResponse registerClient(ClientRequest request,PaymentAccountRequest paymentAccountRequest) {
+        if (repository.existsByPhoneNumber(request.getPhoneNumber()) && repository.existsByEmail(request.getEmail())) {
+            throw new RuntimeException("Phone num already exists Or Email");
 
-    public RegisterAgentResponse registerClient(ClientRequest request) {
-
-        if (repository.existsByPhoneNumber(request.getPhoneNumber()) && repository.existsByEmail(request.getEmail() ) ) {
-            throw new RuntimeException("Email Or Phone already exists");
         }
+        BankAccount bankAccount = BankAccount.builder()
+                .balance(0.0)
+                .build();
+        bankRepository.save(bankAccount);
+
+        var paymentAccount = PaymentAccount.builder()
+                .type(paymentAccountRequest.getType())
+                .accountBalance(0)
+                .build();
+
+        paymentRepository.save(paymentAccount);
 
         String generatedPassword =generatePassword();
-        var Clinet = Client.builder()
+        var Client1 = Client.builder()
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .email(request.getEmail())
                 .phoneNumber(request.getPhoneNumber())
                 .password(passwordEncoder.encode(generatedPassword))
-                .isFirstLogin(true)
                 .role(Role.CLIENT)
-                .isPaymentAccountActivated(false)
-                .createdDate(LocalDate.now())
                 .build();
-        var savedAgent = repository.save(Clinet);
-        var jwtToken = jwtService.generateToken(Clinet);
+        Client1.setPaymentAccount(paymentAccount);
+        Client1.setBankAccount(bankAccount);
 
         String formattedPhoneNumber=formatPhoneNumber(request.getPhoneNumber());
+        System.out.println(formattedPhoneNumber);
+        var savedClient = repository.save(Client1);
+        var jwtToken = jwtService.generateToken(Client1);
+
+        saveUserToken(savedClient, jwtToken);
+
         VonageClient client = VonageClient.builder().apiKey("2053ed34").apiSecret("j2Cy3qjnDhKlnCbi").build();
         System.out.println(client);
         TextMessage message = new TextMessage("Jibi LKLCF",
@@ -81,9 +102,7 @@ public class AgentService {
         } else {
             System.out.println("Message failed with error: " + response.getMessages().get(0).getErrorText());
         }
-
-        saveUserToken(savedAgent, jwtToken);
-        return RegisterAgentResponse.builder().message("success " + generatedPassword).build();
+        return RegisterAgentResponse.builder().message("success"+generatedPassword).build();
     }
 
 
@@ -105,8 +124,6 @@ public class AgentService {
                          client.setFirstName(clientRequest.getFirstName());
                          client.setLastName(clientRequest.getLastName());
                          client.setEmail(clientRequest.getEmail());
-                         client.setAddress(clientRequest.getAddress());
-                         client.setCIN(clientRequest.getCIN());
                          client.setPhoneNumber(clientRequest.getPhoneNumber());
 
 
