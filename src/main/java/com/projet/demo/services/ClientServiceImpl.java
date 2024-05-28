@@ -43,8 +43,8 @@ public class ClientServiceImpl implements ClientService {
     public ClientProfileResponse getAccount(long id) {
         Client client = clientRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid client ID"));
-        return ClientProfileResponse.builder().firstName(client.getFirstName()).lastName(client.getLastName()).CIN(client.getCIN())
-                .phoneNumber(client.getPhoneNumber()).email(client.getEmail()).address(client.getAddress()).build();  }
+        return ClientProfileResponse.builder().firstName(client.getFirstName()).lastName(client.getLastName())
+                .phoneNumber(client.getPhoneNumber()).email(client.getEmail()).build();  }
 
     public RegisterAgentResponse changePassword(ClientRequest request) {
         Optional<Client> optionalClient = clientRepository.findByPhoneNumber(request.getPhoneNumber());
