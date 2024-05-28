@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 public class CmiService {
@@ -38,7 +39,8 @@ public class CmiService {
 
         Long idClient = feedAccountRequest.getIdClient();
         PaymentAccount paymentAccount = clientRepository.findClientByClientId(idClient).getPaymentAccount();
-        BankAccount bankAccount = bankAccountRepository.findByAccountNumber(feedAccountRequest.getBankAccountNumber());
+        BankAccount bankAccount = bankAccountRepository.findByIdClient(idClient);
+
         double amount = feedAccountRequest.getAmount();
 
         if (bankAccount == null) {
@@ -105,7 +107,7 @@ public class CmiService {
     }
 
 
-    public PaymentResponse payCredictorService(PaymentRequest paymentRequest){
+    public PaymentResponse payCreditorService(PaymentRequest paymentRequest){
 
         Client creditor = clientRepository.findAgentByClientId(paymentRequest.getIdCreditor());
         Client client = clientRepository.findClientByClientId(paymentRequest.getIdClient());

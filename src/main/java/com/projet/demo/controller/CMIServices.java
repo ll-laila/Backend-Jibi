@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/fim/est3Dgate")
 @PreAuthorize("hasRole('CLIENT')")
 public class CMIServices {
@@ -31,7 +31,7 @@ public class CMIServices {
     @PutMapping("/payService")
     @PreAuthorize("hasAuthority('client:update')")
     public PaymentResponse payCreditorService(@RequestBody PaymentRequest paymentRequest){
-        return cmiService.payCredictorService(paymentRequest);
+        return cmiService.payCreditorService(paymentRequest);
     }
 
 

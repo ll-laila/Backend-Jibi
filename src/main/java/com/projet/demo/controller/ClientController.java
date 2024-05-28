@@ -1,10 +1,7 @@
 package com.projet.demo.controller;
 
 
-import com.projet.demo.model.AgentResposne;
-import com.projet.demo.model.AgentServiceResponse;
-import com.projet.demo.model.ClientProfileResponse;
-import com.projet.demo.model.PaymentAccountResponse;
+import com.projet.demo.model.*;
 import com.projet.demo.services.ClientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/fim/est3Dgate")
 @RequiredArgsConstructor
@@ -36,6 +33,12 @@ public class ClientController {
         return clientservice.getAllServicesByAgentId(agentId);
     }
 
+    @GetMapping("/history/{phoneNumberClient}")
+    @PreAuthorize("hasAuthority('client:read')")
+    public List<OperationResponse> getAllServicesByAgentId(@PathVariable String phoneNumberClient){
+        return clientservice.getClientOperation(phoneNumberClient);
+    }
+
     @GetMapping("/PaymentAccount/{id}")
     @PreAuthorize("hasAuthority('client:read')")
     public PaymentAccountResponse getPaymentAccount(@PathVariable("id")  long id ){
@@ -53,6 +56,8 @@ public class ClientController {
     public ClientProfileResponse getClientByPhoneNumber(@PathVariable("phoneNumber") String phoneNumber){
         return  clientservice.getClientByPhoneNumber(phoneNumber);
     }
+
+
 
 
 }

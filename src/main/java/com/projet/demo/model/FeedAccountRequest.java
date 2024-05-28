@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 public class FeedAccountRequest {
 
     private Long idClient;
-    private String bankAccountNumber;
     private double amount;
 }
 
