@@ -1,10 +1,12 @@
 package com.projet.demo.controller;
 
 import com.projet.demo.entity.Client;
+import com.projet.demo.model.AgentServiceRequest;
 import com.projet.demo.model.ClientRequest;
 import com.projet.demo.model.PaymentAccountRequest;
 import com.projet.demo.model.RegisterAgentResponse;
 import com.projet.demo.services.AgentService;
+import com.projet.demo.services.AgentServicesService;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -23,6 +25,7 @@ import java.util.List;
 public class AgentController {
 
 private  final AgentService service;
+private final AgentServicesService agentservice;
     @Operation(
             description = "Get endpoint for Agent",
             summary = "This is a summary for management get endpoint",
@@ -57,14 +60,7 @@ private  final AgentService service;
     }
 
 
-    @PostMapping("/register")
-    @PreAuthorize("hasAuthority('agent:create')")
-    @Hidden
-    public ResponseEntity<RegisterAgentResponse> registerClient(
-            @RequestBody ClientRegistrationRequest registrationRequest
-    ) {
-        return ResponseEntity.ok(service.registerClient(registrationRequest.getClientRequest(), registrationRequest.getPaymentAccountRequest()));
-    }
+
 
     @Data
     static class ClientRegistrationRequest {
@@ -86,4 +82,30 @@ private  final AgentService service;
     @PreAuthorize("hasAuthority('agent:delete')")
     public RegisterAgentResponse deleteClient(@PathVariable("id") Long id) { return service.deleteClient(id);
     }
+
+    @PostMapping("/services/{id}")
+    @PreAuthorize("hasAuthority('agent:create')")
+    @Hidden
+    public ResponseEntity<RegisterAgentResponse> createService(
+            @PathVariable Long id,
+            @RequestBody AgentServiceRequest request
+    ) {
+        return ResponseEntity.ok(agentservice.createService(request, id));
+    }
+
+    @PutMapping("/service/update/{serviceId}")
+    @PreAuthorize("hasAuthority('agent:update')")
+    public ResponseEntity<RegisterAgentResponse> updateService(
+            @PathVariable Long serviceId,
+            @RequestBody AgentServiceRequest request
+    ) {
+        return ResponseEntity.ok(agentservice.updateService(serviceId, request));
+    }
+
+    @DeleteMapping("/service/delete/{serviceId}")
+    @PreAuthorize("hasAuthority('agent:delete')")
+    public RegisterAgentResponse deleteService(@PathVariable Long serviceId) {
+        return agentservice.deleteService(serviceId);
+    }
+
 }
