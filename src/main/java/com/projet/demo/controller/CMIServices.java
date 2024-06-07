@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
-@RequestMapping("/fim/est3Dgate")
+@RequestMapping("/client")
 @PreAuthorize("hasRole('CLIENT')")
 public class CMIServices {
 

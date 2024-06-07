@@ -57,7 +57,6 @@ public class AgentService {
     public RegisterAgentResponse registerClient(ClientRequest request,PaymentAccountRequest paymentAccountRequest) {
         if (repository.existsByPhoneNumber(request.getPhoneNumber()) && repository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("Phone num already exists Or Email");
-
         }
         BankAccount bankAccount = BankAccount.builder()
                 .balance(0.0)
@@ -70,7 +69,6 @@ public class AgentService {
                 .build();
 
         paymentRepository.save(paymentAccount);
-
         String generatedPassword =generatePassword();
         var Client1 = Client.builder()
                 .firstName(request.getFirstName())
@@ -150,4 +148,5 @@ public class AgentService {
               return RegisterAgentResponse.builder().message("Error during Deleting").build();
         }
     }
+
 }

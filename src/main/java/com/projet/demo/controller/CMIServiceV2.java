@@ -9,7 +9,4 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/fim/est3DgateV2")
 public class CMIServiceV2 {
 
-
-
-
 }

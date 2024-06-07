@@ -5,6 +5,7 @@ import com.projet.demo.model.ClientRequest;
 import com.projet.demo.model.PaymentAccountRequest;
 import com.projet.demo.model.RegisterAgentResponse;
 import com.projet.demo.services.AgentService;
+import com.projet.demo.services.ClientService;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -22,23 +23,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AgentController {
 
-private  final AgentService service;
-    @Operation(
-            description = "Get endpoint for Agent",
-            summary = "This is a summary for management get endpoint",
-            responses = {
-                    @ApiResponse(
-                            description = "Success",
-                            responseCode = "200"
-                    ),
-                    @ApiResponse(
-                            description = "Unauthorized / Invalid Token",
-                            responseCode = "403"
-                    )
-            }
-
-    )
-
+    private  final AgentService service;
+    private final ClientService clientService;
 
 
     @GetMapping("/list")
@@ -50,7 +36,6 @@ private  final AgentService service;
     @GetMapping("/client/{id}")
     @PreAuthorize("hasAuthority('agent:read')")
     public Client getById(@PathVariable("id") Long id) {
-        // Logic to find user by ID
         Client Client = service.findById(id);
         // Return the found user or handle the case where user is not found
         return Client;
@@ -73,8 +58,6 @@ private  final AgentService service;
 
     }
 
-
-
     @PutMapping("/update/{id}")
     @PreAuthorize("hasAuthority('agent:update')")
     public ResponseEntity<RegisterAgentResponse> updateClient(@PathVariable("id") Long id, @RequestBody ClientRequest updatedAgent)  {
@@ -85,5 +68,12 @@ private  final AgentService service;
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasAuthority('agent:delete')")
     public RegisterAgentResponse deleteClient(@PathVariable("id") Long id) { return service.deleteClient(id);
+    }
+
+    @PreAuthorize("hasAuthority('agent:update')")
+    @PostMapping("/changePassword")
+    public ResponseEntity<RegisterAgentResponse> changePassword(@RequestBody ClientRequest request) {
+        RegisterAgentResponse client = clientService.changePassword(request);
+        return ResponseEntity.ok(client);
     }
 }

@@ -35,6 +35,9 @@ public interface ClientRepository extends JpaRepository<Client,Long> {
    // Client findByPhoneNumber(String phoneNumber);
     Optional<Client> findByPhoneNumber(String phoneNumber);
 
+    @Query(value = "SELECT * FROM client WHERE phone_number = ?1 ", nativeQuery = true)
+    Client findByPhoneNum(String phoneNumber);
+
 
 
 

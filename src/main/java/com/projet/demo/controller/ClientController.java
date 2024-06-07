@@ -5,6 +5,7 @@ import com.projet.demo.model.*;
 import com.projet.demo.services.ClientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,7 +13,7 @@ import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
-@RequestMapping("/fim/est3Dgate")
+@RequestMapping("/client")
 @RequiredArgsConstructor
 @PreAuthorize("hasRole('CLIENT')")
 public class ClientController {
@@ -57,7 +58,11 @@ public class ClientController {
         return  clientservice.getClientByPhoneNumber(phoneNumber);
     }
 
-
-
+    @PreAuthorize("hasAuthority('client:update')")
+    @PostMapping("/changePassword")
+    public ResponseEntity<RegisterAgentResponse> changePassword(@RequestBody ClientRequest request) {
+        RegisterAgentResponse client = clientservice.changePassword(request);
+        return ResponseEntity.ok(client);
+    }
 
 }

@@ -13,7 +13,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -31,7 +30,7 @@ public class Client  implements UserDetails {
     private String lastName;
     private String email;
     private String address;
-    private String CIN;
+    private String cin;
     private Date birthDate ;
     private String newPassword;
     private String phoneNumber;
@@ -39,14 +38,9 @@ public class Client  implements UserDetails {
     private String password;
     private Boolean isFirstLogin ;
     private LocalDate createdDate;
-
-
-    private String CommercialRn ;
+    private String commercialRn;
     private String patentNumber ;
     private Boolean isPaymentAccountActivated ;
-    private String verificationCode;
-    private String VerificationCodeCreatedAt;
-    private String image;
 
 
     @JsonManagedReference

@@ -43,7 +43,7 @@ public class AdminService {
         return password.toString();
     }
 
-    public RegisterAgentResponse registerAgent(AgentRequest request) {
+    public Client registerAgent(AgentRequest request) {
         if (repository.existsByPhoneNumber(request.getPhoneNumber()) && repository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("Phone num already exists Or Email");
 
@@ -54,13 +54,15 @@ public class AdminService {
                 .lastName(request.getLastName())
                 .address(request.getAddress())
                 .email(request.getEmail())
+                .cin(request.getCin())
+                .birthDate(request.getBirthDate())
                 .phoneNumber(request.getPhoneNumber())
-                .CommercialRn(request.getCommercialRn())
+                .commercialRn(request.getCommercialRn())
                 .patentNumber(request.getPatentNumber())
                 .password(passwordEncoder.encode(generatedPassword))
                 .role(Role.AGENT)
                 .build();
-
+        Agent.setIsFirstLogin(true);
         String formattedPhoneNumber=formatPhoneNumber(request.getPhoneNumber());
         System.out.println(formattedPhoneNumber);
         var savedAgent = repository.save(Agent);
@@ -70,7 +72,7 @@ public class AdminService {
 
         VonageClient client = VonageClient.builder().apiKey("2053ed34").apiSecret("j2Cy3qjnDhKlnCbi").build();
         System.out.println(client);
-        TextMessage message = new TextMessage("Jibi LKLCF",
+        TextMessage message = new TextMessage("Jibi LKLCSF",
                 formattedPhoneNumber,
                 "Bonjour "+ request.getFirstName() + ", votre mot de passe est "+ generatedPassword + "."
         );
@@ -80,7 +82,8 @@ public class AdminService {
         } else {
             System.out.println("Message failed with error: " + response.getMessages().get(0).getErrorText());
         }
-        return RegisterAgentResponse.builder().message("success"+generatedPassword).build();
+        System.out.println(RegisterAgentResponse.builder().message("success"+generatedPassword).build());
+        return savedAgent;
     }
 
     public String formatPhoneNumber(String phoneNumber) {
