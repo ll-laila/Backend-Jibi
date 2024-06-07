@@ -5,13 +5,25 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
 @Builder
 public class OperationResponse {
 
-    private  String message ;
+    private Long id;
+
+    private String clientName;
+
+    private String creditorName;
+
+    private String serviceName;
+
+    private double amount;
+
+    private LocalDateTime doItAt;
 
 
 }

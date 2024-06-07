@@ -13,6 +13,6 @@ public interface BankAccountRepository extends JpaRepository<BankAccount,Long> {
 
     BankAccount findByClientCni(String cni);
 
-    @Query("SELECT a FROM BankAccount a WHERE a.accountNumber = :accountNumber")
-    BankAccount findByAccountNumber(@Param("accountNumber") String accountNumber);
+    @Query("SELECT a FROM BankAccount a WHERE a.client.id = :idClient")
+    BankAccount findByIdClient(@Param("idClient") Long idClient);
 }

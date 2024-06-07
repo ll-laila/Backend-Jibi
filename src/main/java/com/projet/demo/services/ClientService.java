@@ -20,4 +20,6 @@ public interface ClientService {
     ClientProfileResponse getClientByPhoneNumber(String phoneNumber);
 
     List<AgentServiceResponse> getAllServicesByAgentId(Long agentId);
+
+    List<OperationResponse> getClientOperation(String phoneNumber);
 }
