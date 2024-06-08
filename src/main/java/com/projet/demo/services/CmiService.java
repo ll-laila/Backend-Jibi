@@ -118,8 +118,10 @@ public class CmiService {
         if (client.getPaymentAccount().getAccountBalance() >= amount) {
             doTransaction(creditor, client, amount);
             Operation operation = new Operation();
+            operation.setRefOperation(paymentRequest.getRefOperation());
             operation.setAmount(amount);
             operation.setCreditorName(creditor.getFirstName() + " " + creditor.getLastName());
+            operation.setIdCreditor(paymentRequest.getIdCreditor());
             operation.setServiceName(service.getName());
             operation.setDoItAt(LocalDateTime.now());
             operation.setClient(client);

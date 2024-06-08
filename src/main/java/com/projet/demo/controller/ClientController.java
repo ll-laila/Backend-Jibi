@@ -12,19 +12,12 @@ import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
-@RequestMapping("/fim/est3Dgate")
+@RequestMapping("/client/infos")
 @RequiredArgsConstructor
 @PreAuthorize("hasRole('CLIENT')")
 public class ClientController {
 
     private final ClientService clientservice;
-
-
-    @GetMapping("/allCreditors")
-    @PreAuthorize("hasAuthority('client:read')")
-    public List<AgentResposne> allCreditors() {
-        return clientservice.getAllCreditors();
-    }
 
 
     @GetMapping("/services/{agentId}")

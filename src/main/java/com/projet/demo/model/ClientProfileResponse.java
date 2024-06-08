@@ -13,6 +13,8 @@ public class ClientProfileResponse {
     private Long id;
     private String firstName;
     private String lastName;
+    private String CIN;
     private String email;
+    private String address;
     private String phoneNumber;
 }

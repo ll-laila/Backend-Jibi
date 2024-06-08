@@ -10,6 +10,8 @@ public class ClientMapper {
                 .id(client.getId())
                 .firstName(client.getFirstName())
                 .lastName(client.getLastName())
+                .CIN(client.getCIN())
+                .address(client.getAddress())
                 .email(client.getEmail())
                 .phoneNumber(client.getPhoneNumber())
                 .build();

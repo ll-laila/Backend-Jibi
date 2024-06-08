@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PaymentRequest {
 
+    private String refOperation;
     private Long idClient;
     private Long idCreditor;
     private Long idService;
