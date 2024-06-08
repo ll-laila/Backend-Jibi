@@ -1,6 +1,5 @@
 package com.projet.demo.entity;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.projet.demo.token.Token;
