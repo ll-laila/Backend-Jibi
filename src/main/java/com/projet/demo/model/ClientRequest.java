@@ -3,11 +3,11 @@ package com.projet.demo.model;
 import com.projet.demo.entity.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.ToString;
 
 import java.util.Date;
 
 @Data
-@AllArgsConstructor
 
 public class ClientRequest {
     private Long agentId;
@@ -17,7 +17,6 @@ public class ClientRequest {
     private String phoneNumber;
     private Date birthDate ;
     private String newPassword;
+    @ToString.Exclude
     private Role role;
-
-
 }

@@ -6,6 +6,7 @@ import com.projet.demo.model.ClientRequest;
 import com.projet.demo.model.PaymentAccountRequest;
 import com.projet.demo.model.RegisterAgentResponse;
 import com.projet.demo.services.AgentService;
+import com.projet.demo.services.ClientService;
 import com.projet.demo.services.AgentServicesService;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,6 +26,7 @@ public class AgentController {
 
 private  final AgentService service;
 private final AgentServicesService agentservice;
+private final ClientService clientService;
     @Operation(
             description = "Get endpoint for Agent",
             summary = "This is a summary for management get endpoint",
@@ -69,14 +71,10 @@ private final AgentServicesService agentservice;
     @GetMapping("/client/{id}")
     @PreAuthorize("hasAuthority('agent:read')")
     public Client getById(@PathVariable("id") Long id) {
-        // Logic to find user by ID
         Client Client = service.findById(id);
         // Return the found user or handle the case where user is not found
         return Client;
     }
-
-
-
 
     @Data
     static class ClientRegistrationRequest {
@@ -84,8 +82,6 @@ private final AgentServicesService agentservice;
         private PaymentAccountRequest paymentAccountRequest;
 
     }
-
-
 
     @PutMapping("/update/{id}")
     @PreAuthorize("hasAuthority('agent:update')")
@@ -103,6 +99,14 @@ private final AgentServicesService agentservice;
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasAuthority('agent:delete')")
     public RegisterAgentResponse deleteClient(@PathVariable("id") Long id) { return service.deleteClient(id);
+    }
+
+
+    @PreAuthorize("hasAuthority('agent:update')")
+    @PostMapping("/changePassword")
+    public ResponseEntity<RegisterAgentResponse> changePassword(@RequestBody ClientRequest request) {
+        RegisterAgentResponse client = clientService.changePassword(request);
+        return ResponseEntity.ok(client);
     }
 
     @PostMapping("/services/{id}")
@@ -129,5 +133,7 @@ private final AgentServicesService agentservice;
     public RegisterAgentResponse deleteService(@PathVariable Long serviceId) {
         return agentservice.deleteService(serviceId);
     }
+
+
 
 }

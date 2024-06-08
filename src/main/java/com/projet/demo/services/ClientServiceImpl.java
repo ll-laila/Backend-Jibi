@@ -46,7 +46,7 @@ public class ClientServiceImpl implements ClientService {
         return ClientProfileResponse.builder().firstName(client.getFirstName()).lastName(client.getLastName())
                 .phoneNumber(client.getPhoneNumber()).email(client.getEmail()).build();  }
 
-    public RegisterAgentResponse changePassword(ClientRequest request) {
+    /*public RegisterAgentResponse changePassword(ClientRequest request) {
         Optional<Client> optionalClient = clientRepository.findByPhoneNumber(request.getPhoneNumber());
         if (optionalClient.isPresent()) {
             Client client = optionalClient.get();
@@ -57,8 +57,7 @@ public class ClientServiceImpl implements ClientService {
         } else {
             return RegisterAgentResponse.builder().message("Client not found").build();
         }
-    }
-
+    }*/
 
     @Override
     public List<AgentResposne> getAllCreditors(){
@@ -78,7 +77,6 @@ public class ClientServiceImpl implements ClientService {
                 .collect(Collectors.toList());
     }
 
-
     @Override
     public PaymentAccountResponse getPaymentAccountByClientId(long id) {
         PaymentAccount paymentAccount = paymentAccountRepository.findPaymentAccountByClientId(id);
@@ -86,9 +84,7 @@ public class ClientServiceImpl implements ClientService {
             return PaymentAccountMapper.ConvertToDto(paymentAccount);
         }
         return null;
-
     }
-
 
     @Override
     public ClientProfileResponse getClientById(long id) {
@@ -107,7 +103,6 @@ public class ClientServiceImpl implements ClientService {
                 .orElse(null);
     }
 
-
     @Override
     public List<OperationResponse> getClientOperation(String phoneNumber) {
         List<Operation> operations = operationRepository.findOperationsByPhoneNumber(phoneNumber);
@@ -116,6 +111,20 @@ public class ClientServiceImpl implements ClientService {
                 .collect(Collectors.toList());
     }
 
+    public RegisterAgentResponse changePassword(ClientRequest request) {
+
+        Client client = clientRepository.findByPhoneNum(request.getPhoneNumber());
+        System.out.println(client);
+        if (!(client == null) ) {
+            client.setPassword(passwordEncoder.encode(request.getNewPassword()));
+            System.out.println(request.getNewPassword());
+            client.setIsFirstLogin(false);
+            clientRepository.save(client);
+            return RegisterAgentResponse.builder().message("Password updated successfully").build();
+        } else {
+            return RegisterAgentResponse.builder().message("Client not found").build();
+        }
+    }
 
 }
 

@@ -2,10 +2,12 @@ package com.projet.demo.services;
 
 
 import com.projet.demo.config.JwtService;
+import com.projet.demo.entity.BankAccount;
 import com.projet.demo.entity.Client;
 import com.projet.demo.entity.Role;
 import com.projet.demo.model.AgentRequest;
 import com.projet.demo.model.RegisterAgentResponse;
+import com.projet.demo.repository.BankAccountRepository;
 import com.projet.demo.repository.ClientRepository;
 import com.projet.demo.token.Token;
 import com.projet.demo.token.TokenRepository;
@@ -29,6 +31,7 @@ public class AdminService {
     private final TokenRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final BankAccountRepository bankAccountRepository;
 
     private static final String CHARACTERS = "0123456789";
     public static String generatePassword() {
@@ -43,24 +46,30 @@ public class AdminService {
         return password.toString();
     }
 
-    public RegisterAgentResponse registerAgent(AgentRequest request) {
+    public Client registerAgent(AgentRequest request) {
         if (repository.existsByPhoneNumber(request.getPhoneNumber()) && repository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("Phone num already exists Or Email");
-
         }
+        BankAccount bankAccount= BankAccount.builder()
+                .balance(100000000)
+                .build();
+        bankAccountRepository.save(bankAccount);
         String generatedPassword =generatePassword();
         var Agent = Client.builder()
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .address(request.getAddress())
                 .email(request.getEmail())
+                .cin(request.getCin())
+                .birthDate(request.getBirthDate())
                 .phoneNumber(request.getPhoneNumber())
-                .CommercialRn(request.getCommercialRn())
+                .commercialRn(request.getCommercialRn())
                 .patentNumber(request.getPatentNumber())
                 .password(passwordEncoder.encode(generatedPassword))
                 .role(Role.AGENT)
                 .build();
-
+        Agent.setBankAccount(bankAccount);
+        Agent.setIsFirstLogin(true);
         String formattedPhoneNumber=formatPhoneNumber(request.getPhoneNumber());
         System.out.println(formattedPhoneNumber);
         var savedAgent = repository.save(Agent);
@@ -70,7 +79,7 @@ public class AdminService {
 
         VonageClient client = VonageClient.builder().apiKey("2053ed34").apiSecret("j2Cy3qjnDhKlnCbi").build();
         System.out.println(client);
-        TextMessage message = new TextMessage("Jibi LKLCF",
+        TextMessage message = new TextMessage("Jibi LKLCSF",
                 formattedPhoneNumber,
                 "Bonjour "+ request.getFirstName() + ", votre mot de passe est "+ generatedPassword + "."
         );
@@ -80,7 +89,8 @@ public class AdminService {
         } else {
             System.out.println("Message failed with error: " + response.getMessages().get(0).getErrorText());
         }
-        return RegisterAgentResponse.builder().message("success"+generatedPassword).build();
+        System.out.println(RegisterAgentResponse.builder().message("success"+generatedPassword).build());
+        return savedAgent;
     }
 
     public String formatPhoneNumber(String phoneNumber) {
@@ -111,34 +121,6 @@ public class AdminService {
         tokenRepository.saveAll(validUserTokens);
     }
 
-    /*public void refreshToken(
-            HttpServletRequest request,
-            HttpServletResponse response
-    ) throws IOException {
-        final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        final String refreshToken;
-        final String userEmail;
-        if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
-            return;
-        }
-        refreshToken = authHeader.substring(7);
-        userEmail = jwtService.extractUsername(refreshToken);
-        if (userEmail != null) {
-            Client user = (Client) this.repository.findByEmail(userEmail)
-                    .orElseThrow();
-            if (jwtService.isTokenValid(refreshToken, user)) {
-                var accessToken = jwtService.generateToken(user);
-                revokeAllUserTokens(user);
-                saveUserToken(user, accessToken);
-                var authResponse = AuthenticationResponse.builder()
-                        .accessToken(accessToken)
-                        .refreshToken(refreshToken)
-                        .build();
-                new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
-            }
-        }
-    }*/
-
     public List<Client> findAll() {
         return repository.findAllAgentWithRoleClient();
     }
@@ -152,7 +134,6 @@ public class AdminService {
         Client agent=
                repository.findAgentByClientId(id);
                        if(agent!=null) {
-
                      agent.setFirstName(userUpdateRequest.getFirstName());
                      agent.setLastName(userUpdateRequest.getLastName());
                      agent.setEmail(userUpdateRequest.getEmail());

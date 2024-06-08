@@ -7,11 +7,13 @@ import com.projet.demo.repository.ClientRepository;
 import com.projet.demo.services.AdminService;
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -21,7 +23,6 @@ import java.util.List;
 
 public class AdminController {
     private final AdminService service;
-    private final ClientRepository userRepository;
 
     @GetMapping("/list")
    @PreAuthorize("hasAuthority('admin:read')")
@@ -32,40 +33,26 @@ public class AdminController {
     @GetMapping("/agent/{id}")
     @PreAuthorize("hasAuthority('admin:read')")
     public Client getById(@PathVariable("id") Long id) {
-        Client agent = service.findById(id);
-        return agent;
+        return service.findById(id);
     }
 
     @PostMapping("/register")
     @PreAuthorize("hasAuthority('admin:create')")
     @Hidden
-    public ResponseEntity<RegisterAgentResponse> registerAgent(
+    public ResponseEntity<Client> registerAgent(
             @RequestBody AgentRequest request
     ) {
         return ResponseEntity.ok(service.registerAgent(request));
     }
 
 
-
-
-
     @PutMapping("/update/{id}")
     @PreAuthorize("hasAuthority('admin:update')")
     public ResponseEntity<RegisterAgentResponse> updateUser(@PathVariable("id") Long id, @RequestBody AgentRequest updatedAgent)  {
-      return ResponseEntity.ok(service.updateAgent(id,updatedAgent));
+        return ResponseEntity.ok(service.updateAgent(id,updatedAgent));
     }
 
 
-
-
-
-
-    @DeleteMapping("/del")
-    @PreAuthorize("hasAuthority('admin:delete')")
-    @Hidden
-    public String delete() {
-        return "DELETE:: admin controller";
-    }
 
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasAuthority('admin:delete')")
