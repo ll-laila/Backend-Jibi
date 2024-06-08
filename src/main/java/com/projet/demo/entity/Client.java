@@ -27,6 +27,8 @@ public class Client  implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private Long agentId;
     private String firstName;
     private String lastName;
     private String email;

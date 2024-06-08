@@ -15,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:4200")
@@ -43,6 +42,23 @@ private final AgentServicesService agentservice;
     )
 
 
+    @PostMapping("/register")
+    @PreAuthorize("hasAuthority('agent:create')")
+    @Hidden
+    public ResponseEntity<RegisterAgentResponse> registerClient(
+            @RequestBody ClientRegistrationRequest registrationRequest
+    ) {
+        return ResponseEntity.ok(service.registerClient(
+                registrationRequest.getClientRequest(),
+                registrationRequest.getPaymentAccountRequest()
+        ));
+    }
+
+    @GetMapping("/listByAgent/{agentId}")
+    @PreAuthorize("hasAuthority('agent:read')")
+    public List<Client> getClientsByAgent(@PathVariable("agentId") Long agentId) {
+        return service.getClientsByAgentId(agentId);
+    }
 
     @GetMapping("/list")
     @PreAuthorize("hasAuthority('agent:read')")
@@ -73,8 +89,14 @@ private final AgentServicesService agentservice;
 
     @PutMapping("/update/{id}")
     @PreAuthorize("hasAuthority('agent:update')")
-    public ResponseEntity<RegisterAgentResponse> updateClient(@PathVariable("id") Long id, @RequestBody ClientRequest updatedAgent)  {
-        return ResponseEntity.ok(service.updateClient(id,updatedAgent));
+    public ResponseEntity<RegisterAgentResponse> updateClient(
+            @PathVariable("id") Long id,
+            @RequestBody ClientRegistrationRequest registrationRequest
+    ) {
+        ClientRequest clientRequest = registrationRequest.getClientRequest();
+        PaymentAccountRequest paymentAccountRequest = registrationRequest.getPaymentAccountRequest();
+
+        return ResponseEntity.ok(service.updateClient(id, clientRequest, paymentAccountRequest));
     }
 
 

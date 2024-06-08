@@ -14,15 +14,4 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @PreAuthorize("hasAuthority('AGENT')")
 public class CMIServiceV2 {
-    private  final AgentService service;
-    @PostMapping("/register")
-    @PreAuthorize("hasAuthority('agent:create')")
-    @Hidden
-    public ResponseEntity<RegisterAgentResponse> registerClient(
-            @RequestBody AgentController.ClientRegistrationRequest registrationRequest
-    ) {
-        return ResponseEntity.ok(service.registerClient(registrationRequest.getClientRequest(), registrationRequest.getPaymentAccountRequest()));
-    }
-
-
 }
