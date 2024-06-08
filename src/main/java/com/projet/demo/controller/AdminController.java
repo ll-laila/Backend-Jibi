@@ -7,14 +7,15 @@ import com.projet.demo.repository.ClientRepository;
 import com.projet.demo.services.AdminService;
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.logging.Logger;
 
-@CrossOrigin(origins = "http://localhost:4200", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE},
-        allowedHeaders = {"Content-Type", "Authorization"}, exposedHeaders = {"Authorization"})
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/api/v1/admin")
 @PreAuthorize("hasRole('ADMIN')")
@@ -22,7 +23,6 @@ import java.util.List;
 
 public class AdminController {
     private final AdminService service;
-    private final ClientRepository userRepository;
 
     @GetMapping("/list")
    @PreAuthorize("hasAuthority('admin:read')")
@@ -53,12 +53,6 @@ public class AdminController {
     }
 
 
-    @DeleteMapping("/del")
-    @PreAuthorize("hasAuthority('admin:delete')")
-    @Hidden
-    public String delete() {
-        return "DELETE:: admin controller";
-    }
 
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasAuthority('admin:delete')")

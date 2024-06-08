@@ -77,7 +77,6 @@ public class ClientServiceImpl implements ClientService {
                 .collect(Collectors.toList());
     }
 
-
     @Override
     public PaymentAccountResponse getPaymentAccountByClientId(long id) {
         PaymentAccount paymentAccount = paymentAccountRepository.findPaymentAccountByClientId(id);
@@ -85,9 +84,7 @@ public class ClientServiceImpl implements ClientService {
             return PaymentAccountMapper.ConvertToDto(paymentAccount);
         }
         return null;
-
     }
-
 
     @Override
     public ClientProfileResponse getClientById(long id) {
@@ -106,7 +103,6 @@ public class ClientServiceImpl implements ClientService {
                 .orElse(null);
     }
 
-
     @Override
     public List<OperationResponse> getClientOperation(String phoneNumber) {
         List<Operation> operations = operationRepository.findOperationsByPhoneNumber(phoneNumber);
@@ -118,8 +114,10 @@ public class ClientServiceImpl implements ClientService {
     public RegisterAgentResponse changePassword(ClientRequest request) {
 
         Client client = clientRepository.findByPhoneNum(request.getPhoneNumber());
+        System.out.println(client);
         if (!(client == null) ) {
             client.setPassword(passwordEncoder.encode(request.getNewPassword()));
+            System.out.println(request.getNewPassword());
             client.setIsFirstLogin(false);
             clientRepository.save(client);
             return RegisterAgentResponse.builder().message("Password updated successfully").build();

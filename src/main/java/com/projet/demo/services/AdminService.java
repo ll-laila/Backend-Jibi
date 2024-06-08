@@ -49,7 +49,6 @@ public class AdminService {
     public Client registerAgent(AgentRequest request) {
         if (repository.existsByPhoneNumber(request.getPhoneNumber()) && repository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("Phone num already exists Or Email");
-
         }
         BankAccount bankAccount= BankAccount.builder()
                 .balance(100000000)
@@ -122,34 +121,6 @@ public class AdminService {
         tokenRepository.saveAll(validUserTokens);
     }
 
-    /*public void refreshToken(
-            HttpServletRequest request,
-            HttpServletResponse response
-    ) throws IOException {
-        final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        final String refreshToken;
-        final String userEmail;
-        if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
-            return;
-        }
-        refreshToken = authHeader.substring(7);
-        userEmail = jwtService.extractUsername(refreshToken);
-        if (userEmail != null) {
-            Client user = (Client) this.repository.findByEmail(userEmail)
-                    .orElseThrow();
-            if (jwtService.isTokenValid(refreshToken, user)) {
-                var accessToken = jwtService.generateToken(user);
-                revokeAllUserTokens(user);
-                saveUserToken(user, accessToken);
-                var authResponse = AuthenticationResponse.builder()
-                        .accessToken(accessToken)
-                        .refreshToken(refreshToken)
-                        .build();
-                new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
-            }
-        }
-    }*/
-
     public List<Client> findAll() {
         return repository.findAllAgentWithRoleClient();
     }
@@ -163,7 +134,6 @@ public class AdminService {
         Client agent=
                repository.findAgentByClientId(id);
                        if(agent!=null) {
-
                      agent.setFirstName(userUpdateRequest.getFirstName());
                      agent.setLastName(userUpdateRequest.getLastName());
                      agent.setEmail(userUpdateRequest.getEmail());
