@@ -2,10 +2,12 @@ package com.projet.demo.services;
 
 
 import com.projet.demo.config.JwtService;
+import com.projet.demo.entity.BankAccount;
 import com.projet.demo.entity.Client;
 import com.projet.demo.entity.Role;
 import com.projet.demo.model.AgentRequest;
 import com.projet.demo.model.RegisterAgentResponse;
+import com.projet.demo.repository.BankAccountRepository;
 import com.projet.demo.repository.ClientRepository;
 import com.projet.demo.token.Token;
 import com.projet.demo.token.TokenRepository;
@@ -29,6 +31,7 @@ public class AdminService {
     private final TokenRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final BankAccountRepository bankAccountRepository;
 
     private static final String CHARACTERS = "0123456789";
     public static String generatePassword() {
@@ -48,6 +51,10 @@ public class AdminService {
             throw new RuntimeException("Phone num already exists Or Email");
 
         }
+        BankAccount bankAccount= BankAccount.builder()
+                .balance(100000000)
+                .build();
+        bankAccountRepository.save(bankAccount);
         String generatedPassword =generatePassword();
         var Agent = Client.builder()
                 .firstName(request.getFirstName())
@@ -62,6 +69,7 @@ public class AdminService {
                 .password(passwordEncoder.encode(generatedPassword))
                 .role(Role.AGENT)
                 .build();
+        Agent.setBankAccount(bankAccount);
         Agent.setIsFirstLogin(true);
         String formattedPhoneNumber=formatPhoneNumber(request.getPhoneNumber());
         System.out.println(formattedPhoneNumber);
