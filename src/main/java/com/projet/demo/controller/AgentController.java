@@ -25,10 +25,7 @@ public class AgentController {
 
     private  final AgentService service;
     private final ClientService clientService;
-
     private final AgentServicesService agentservice;
-
-
 
     @GetMapping("/list")
     @PreAuthorize("hasAuthority('agent:read')")
@@ -43,9 +40,6 @@ public class AgentController {
         // Return the found user or handle the case where user is not found
         return Client;
     }
-
-
-
 
     @Data
     static class ClientRegistrationRequest {
@@ -98,5 +92,7 @@ public class AgentController {
     public RegisterAgentResponse deleteService(@PathVariable Long serviceId) {
         return agentservice.deleteService(serviceId);
     }
+
+
 
 }
