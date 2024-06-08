@@ -13,7 +13,7 @@ public class AgentMapper {
                 .email(agent.getEmail())
                 .address(agent.getAddress())
                 .phoneNumber(agent.getPhoneNumber())
-                .image(agent.getCIN())
+                .image(agent.getCin())
                 .build();
     }
 

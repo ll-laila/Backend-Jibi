@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 
 @Data
 @Builder
@@ -17,8 +19,9 @@ public class AgentRequest {
     private String address ;
     private String email ;
     private String phoneNumber ;
-    private String CommercialRn ;
+    private String commercialRn;
     private String patentNumber ;
     private String password ;
-    //private String image;
+    private String cin;
+    private Date birthDate;
 }
