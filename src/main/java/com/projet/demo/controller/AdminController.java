@@ -45,10 +45,11 @@ public class AdminController {
         return ResponseEntity.ok(service.registerAgent(request));
     }
 
+
     @PutMapping("/update/{id}")
     @PreAuthorize("hasAuthority('admin:update')")
     public ResponseEntity<RegisterAgentResponse> updateUser(@PathVariable("id") Long id, @RequestBody AgentRequest updatedAgent)  {
-      return ResponseEntity.ok(service.updateAgent(id,updatedAgent));
+        return ResponseEntity.ok(service.updateAgent(id,updatedAgent));
     }
 
 
