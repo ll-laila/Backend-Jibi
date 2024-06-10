@@ -40,15 +40,17 @@ public class Client  implements UserDetails {
     private String patentNumber ;
     private Boolean isPaymentAccountActivated ;
 
-
     @JsonManagedReference
+    @ToString.Exclude
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "paymentAccountId", referencedColumnName = "paymentAccountId")
     private PaymentAccount paymentAccount;
 
+    @ToString.Exclude
     @OneToOne
     private BankAccount bankAccount;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "client")
     private List<Operation> operations;
 
