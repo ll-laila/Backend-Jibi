@@ -62,11 +62,6 @@ private final ClientService clientService;
         return service.getClientsByAgentId(agentId);
     }
 
-    @GetMapping("/list")
-    @PreAuthorize("hasAuthority('agent:read')")
-    public List<Client> getAllClient() {
-        return service.findAll();
-    }
 
     @GetMapping("/client/{id}")
     @PreAuthorize("hasAuthority('agent:read')")
