@@ -24,4 +24,5 @@ public class AgentRequest {
     private String password ;
     private String cin;
     private Date birthDate;
+    private String image;
 }

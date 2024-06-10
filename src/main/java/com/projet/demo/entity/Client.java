@@ -39,6 +39,7 @@ public class Client  implements UserDetails {
     private String commercialRn;
     private String patentNumber ;
     private Boolean isPaymentAccountActivated ;
+    private String image;
 
     @JsonManagedReference
     @ToString.Exclude
