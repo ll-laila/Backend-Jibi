@@ -70,6 +70,7 @@ public class AdminService {
                 .build();
         Agent.setBankAccount(bankAccount);
         Agent.setIsFirstLogin(true);
+        Agent.setImage(request.getImage());
         String formattedPhoneNumber=formatPhoneNumber(request.getPhoneNumber());
         System.out.println(formattedPhoneNumber);
         var savedAgent = repository.save(Agent);
