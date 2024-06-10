@@ -39,7 +39,8 @@ public class CmiService {
 
         Long idClient = feedAccountRequest.getIdClient();
         PaymentAccount paymentAccount = clientRepository.findClientByClientId(idClient).getPaymentAccount();
-        BankAccount bankAccount = bankAccountRepository.findByIdClient(idClient);
+        BankAccount bankAccount = clientRepository.findClientByClientId(idClient).getBankAccount();
+
 
         double amount = feedAccountRequest.getAmount();
 

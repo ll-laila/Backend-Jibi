@@ -14,6 +14,7 @@ public interface AgentServiceRepository extends JpaRepository<AgentService,Long>
     @Query("SELECT a FROM AgentService a WHERE a.agent.id = :agentId")
     List<AgentService> findAllByAgentId(@Param("agentId") Long agentId);
 
+
     @Query("SELECT s FROM AgentService s WHERE s.id = :serviceId")
     AgentService findServiceById(@Param("serviceId") Long serviceId);
 

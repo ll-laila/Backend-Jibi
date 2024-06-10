@@ -1,16 +1,16 @@
 package com.projet.demo.services;
 
 import com.projet.demo.config.JwtService;
-import com.projet.demo.entity.BankAccount;
-import com.projet.demo.entity.Client;
-import com.projet.demo.entity.PaymentAccount;
-import com.projet.demo.entity.Role;
-import com.projet.demo.model.AgentRequest;
-import com.projet.demo.model.ClientRequest;
-import com.projet.demo.model.PaymentAccountRequest;
-import com.projet.demo.model.RegisterAgentResponse;
+import com.projet.demo.entity.*;
+
+import com.projet.demo.mapper.AgentMapper;
+import com.projet.demo.mapper.ClientMapper;
+
+import com.projet.demo.mapper.OperationMapper;
+import com.projet.demo.model.*;
 import com.projet.demo.repository.BankAccountRepository;
 import com.projet.demo.repository.ClientRepository;
+import com.projet.demo.repository.OperationRepository;
 import com.projet.demo.repository.PaymentAccountRepository;
 import com.projet.demo.token.Token;
 import com.projet.demo.token.TokenRepository;
@@ -21,6 +21,7 @@ import com.vonage.client.sms.SmsSubmissionResponse;
 import com.vonage.client.sms.messages.TextMessage;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.weaver.loadtime.Agent;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +30,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -83,28 +85,27 @@ public class AgentService {
                         .build();
                 client.setPaymentAccount(paymentAccount);
                 client.setBankAccount(bankAccount);
-
+                client.setIsFirstLogin(true);
                 var savedClient = repository.save(client);
                 var jwtToken = jwtService.generateToken(client);
 
                 saveUserToken(savedClient, jwtToken);
 
-                // Envoi de SMS via Vonage
-                String formattedPhoneNumber = formatPhoneNumber(request.getPhoneNumber());
-                TextMessage message = new TextMessage("Jibi LKLCF",
+
+                /*String formattedPhoneNumber = formatPhoneNumber(request.getPhoneNumber());
+                TextMessage message = new TextMessage("Jibi LKLCSF",
                         formattedPhoneNumber,
                         "Bonjour " + request.getFirstName() + ", votre mot de passe est " + generatedPassword + "."
                 );
-                SmsSubmissionResponse response = VonageClient.builder().apiKey("2053ed34").apiSecret("j2Cy3qjnDhKlnCbi").build().getSmsClient().submitMessage(message);
+                SmsSubmissionResponse response = VonageClient.builder().apiKey("b5813842").apiSecret("pDcUfRrQBiEAbd7s").build().getSmsClient().submitMessage(message);
                 if (response.getMessages().get(0).getStatus() == MessageStatus.OK) {
                     System.out.println("Message sent successfully.");
                 } else {
                     System.out.println("Message failed with error: " + response.getMessages().get(0).getErrorText());
-                }
+                }*/
 
                 return RegisterAgentResponse.builder().message("Success: " + generatedPassword).build();
             }
-
 
             private void saveUserToken (Client user, String jwtToken){
                 var token = Token.builder()
@@ -121,26 +122,20 @@ public class AgentService {
             paymentAccountRequest){
                 Client client = repository.findClientByClientId(id);
                 if (client != null) {
-                    // Mettre à jour les informations du client
                     client.setFirstName(clientRequest.getFirstName());
                     client.setLastName(clientRequest.getLastName());
                     client.setEmail(clientRequest.getEmail());
                     client.setPhoneNumber(clientRequest.getPhoneNumber());
-
-                    // Mettre à jour les informations du compte de paiement
                     PaymentAccount paymentAccount = client.getPaymentAccount();
                     paymentAccount.setType(paymentAccountRequest.getType()); // Mettre à jour le type du compte de paiement
 
-                    // Enregistrer les modifications
                     repository.save(client);
-
                     return RegisterAgentResponse.builder().message("Agent updated successfully").build();
                 } else {
                     System.out.println("The Client with the given Id does not exist in the database");
                     return RegisterAgentResponse.builder().message("Error: Client not found").build();
                 }
             }
-
 
             public List<Client> findAll () {
                 return repository.findAllClientsWithRoleClient();
@@ -165,5 +160,32 @@ public class AgentService {
                 }
             }
 
+
+    @Autowired
+    private OperationRepository operationRepository;
+    public List<OperationResponse> getAgentOperation(String phoneNumber) {
+        List<Operation> operations = operationRepository.findOperationsByPhoneNumber(phoneNumber);
+        return operations.stream()
+                .map(OperationMapper::ConvertToDto)
+                .collect(Collectors.toList());
+    }
+
+
+
+    public AgentResposne getAgentByPhoneNumber(String phoneNumber) {
+        return repository.findByPhoneNumber(phoneNumber)
+                .map(AgentMapper::ConvertToDto)
+                .orElse(null);
+    }
+
+
+
+        public List<OperationResponse> getAgentOperation(Long id) {
+            List<Operation> operations = operationRepository.findOperationsByAgentId(id);
+            return operations.stream()
+                    .map(OperationMapper::ConvertToDto)
+                    .collect(Collectors.toList());
         }
+
+}
 
