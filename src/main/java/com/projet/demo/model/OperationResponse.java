@@ -15,6 +15,8 @@ public class OperationResponse {
 
     private Long id;
 
+    private String refOperation;
+
     private String clientName;
 
     private String creditorName;

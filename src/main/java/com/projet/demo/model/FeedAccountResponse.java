@@ -10,6 +10,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FeedAccountResponse {
-    private Boolean success;
     private String message;
 }

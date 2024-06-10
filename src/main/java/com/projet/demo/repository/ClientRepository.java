@@ -33,7 +33,6 @@ public interface ClientRepository extends JpaRepository<Client,Long> {
     Optional<Client> findById(Long userId);
 
     @Query(value = "SELECT * FROM client WHERE phone_number = ?1 ", nativeQuery = true)
-   // Client findByPhoneNumber(String phoneNumber);
     Optional<Client> findByPhoneNumber(String phoneNumber);
 
     List<Client> findByAgentId(Long agentId);
