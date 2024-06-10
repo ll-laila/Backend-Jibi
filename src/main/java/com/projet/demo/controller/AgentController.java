@@ -132,7 +132,7 @@ public class AgentController {
         return agentservice.deleteService(serviceId);
     }
 
-<<<<<<< HEAD
+
     @GetMapping("/serviceByAgent/{agentId}")
     @PreAuthorize("hasAuthority('agent:read')")
     public List<AgentServiceResponse> getServicesByAgent(@PathVariable("agentId") Long agentId) {
@@ -149,12 +149,11 @@ public class AgentController {
 
 
 
-=======
     @GetMapping("/operations/{id}")
     @PreAuthorize("hasAuthority('agent:read')")
     public ResponseEntity<List<OperationResponse>> getAgentOperations(@PathVariable Long id) {
         List<OperationResponse> operations = service.getAgentOperation(id);
         return ResponseEntity.ok(operations);
     }
->>>>>>> 0726179d88c9dd27054c6b8a9740d258ceb00cc7
+
 }
