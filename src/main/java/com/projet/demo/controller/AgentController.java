@@ -15,7 +15,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/v1/client")
 @RequiredArgsConstructor
@@ -60,11 +60,7 @@ public class AgentController {
         return service.getClientsByAgentId(agentId);
     }
 
-    @GetMapping("/list")
-    @PreAuthorize("hasAuthority('agent:read')")
-    public List<Client> getAllClient() {
-        return service.findAll();
-    }
+
 
     @GetMapping("/client/{id}")
     @PreAuthorize("hasAuthority('agent:read')")
@@ -116,6 +112,7 @@ public class AgentController {
     ) {
         return ResponseEntity.ok(agentservice.createService(request, id));
     }
+
 
     @PutMapping("/service/update/{serviceId}")
     @PreAuthorize("hasAuthority('agent:update')")
