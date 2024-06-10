@@ -1,10 +1,7 @@
 package com.projet.demo.controller;
 
 import com.projet.demo.entity.Client;
-import com.projet.demo.model.AgentServiceRequest;
-import com.projet.demo.model.ClientRequest;
-import com.projet.demo.model.PaymentAccountRequest;
-import com.projet.demo.model.RegisterAgentResponse;
+import com.projet.demo.model.*;
 import com.projet.demo.services.AgentService;
 import com.projet.demo.services.ClientService;
 import com.projet.demo.services.AgentServicesService;
@@ -24,9 +21,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AgentController {
 
-private  final AgentService service;
-private final AgentServicesService agentservice;
-private final ClientService clientService;
+    private final AgentService service;
+    private final AgentServicesService agentservice;
+    private final ClientService clientService;
+
     @Operation(
             description = "Get endpoint for Agent",
             summary = "This is a summary for management get endpoint",
@@ -91,14 +89,14 @@ private final ClientService clientService;
     ) {
         ClientRequest clientRequest = registrationRequest.getClientRequest();
         PaymentAccountRequest paymentAccountRequest = registrationRequest.getPaymentAccountRequest();
-
         return ResponseEntity.ok(service.updateClient(id, clientRequest, paymentAccountRequest));
     }
 
 
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasAuthority('agent:delete')")
-    public RegisterAgentResponse deleteClient(@PathVariable("id") Long id) { return service.deleteClient(id);
+    public RegisterAgentResponse deleteClient(@PathVariable("id") Long id) {
+        return service.deleteClient(id);
     }
 
 
@@ -135,5 +133,27 @@ private final ClientService clientService;
     }
 
 
+    @GetMapping("/serviceByAgent/{agentId}")
+    @PreAuthorize("hasAuthority('agent:read')")
+    public List<AgentServiceResponse> getServicesByAgent(@PathVariable("agentId") Long agentId) {
+        return agentservice.getAllServicesByAgentId(agentId);
+    }
+
+
+
+    @GetMapping("/agentByPhone/{phoneNumber}")
+    @PreAuthorize("hasAuthority('agent:read')")
+    public AgentResposne getClientByPhoneNumber(@PathVariable("phoneNumber") String phoneNumber){
+        return  service.getAgentByPhoneNumber(phoneNumber);
+    }
+
+
+
+    @GetMapping("/operations/{id}")
+    @PreAuthorize("hasAuthority('agent:read')")
+    public ResponseEntity<List<OperationResponse>> getAgentOperations(@PathVariable Long id) {
+        List<OperationResponse> operations = service.getAgentOperation(id);
+        return ResponseEntity.ok(operations);
+    }
 
 }
