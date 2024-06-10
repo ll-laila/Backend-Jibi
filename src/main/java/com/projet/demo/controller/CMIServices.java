@@ -27,7 +27,7 @@ public class CMIServices {
 
     @GetMapping("/allCreditors")
     @PreAuthorize("hasAuthority('client:read')")
-    public List<AgentResposne> allCreditors() {
+    public List<CreaditorsRequest> allCreditors() {
         return clientservice.getAllCreditors();
     }
 

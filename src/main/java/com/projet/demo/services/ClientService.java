@@ -12,7 +12,7 @@ public interface ClientService {
 
     RegisterAgentResponse changePassword(ClientRequest request);
 
-    List<AgentResposne> getAllCreditors();
+    List<CreaditorsRequest> getAllCreditors();
 
     ClientProfileResponse getClientById(long id);
     PaymentAccountResponse getPaymentAccountByClientId(long id);

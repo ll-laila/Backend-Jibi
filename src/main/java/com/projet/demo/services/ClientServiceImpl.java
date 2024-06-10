@@ -15,7 +15,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -61,11 +60,10 @@ public class ClientServiceImpl implements ClientService {
     }*/
 
     @Override
-    public List<AgentResposne> getAllCreditors(){
+    public List<CreaditorsRequest> getAllCreditors(){
         List<Client> agents = clientRepository.findAllAgentWithRoleClient();
-
         return agents.stream()
-                .map(AgentMapper::ConvertToDto)
+                .map(CreditorsMapper::ConvertToDto)
                 .collect(Collectors.toList());
     }
 

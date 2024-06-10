@@ -66,11 +66,11 @@ public class AdminService {
                 .commercialRn(request.getCommercialRn())
                 .patentNumber(request.getPatentNumber())
                 .password(passwordEncoder.encode(generatedPassword))
+                .image(request.getImage())
                 .role(Role.AGENT)
                 .build();
         Agent.setBankAccount(bankAccount);
         Agent.setIsFirstLogin(true);
-        Agent.setImage(request.getImage());
         String formattedPhoneNumber=formatPhoneNumber(request.getPhoneNumber());
         System.out.println(formattedPhoneNumber);
         var savedAgent = repository.save(Agent);
