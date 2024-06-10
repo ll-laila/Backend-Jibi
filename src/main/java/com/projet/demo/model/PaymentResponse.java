@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PaymentResponse {
 
-    private Boolean success;
+    private int success;
     private String message;
 
 }

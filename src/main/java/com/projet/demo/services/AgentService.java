@@ -2,8 +2,11 @@ package com.projet.demo.services;
 
 import com.projet.demo.config.JwtService;
 import com.projet.demo.entity.*;
+<<<<<<< HEAD
 import com.projet.demo.mapper.AgentMapper;
 import com.projet.demo.mapper.ClientMapper;
+=======
+>>>>>>> 0726179d88c9dd27054c6b8a9740d258ceb00cc7
 import com.projet.demo.mapper.OperationMapper;
 import com.projet.demo.model.*;
 import com.projet.demo.repository.BankAccountRepository;
@@ -165,6 +168,7 @@ public class AgentService {
                 }
             }
 
+<<<<<<< HEAD
     @Autowired
     private OperationRepository operationRepository;
     public List<OperationResponse> getAgentOperation(String phoneNumber) {
@@ -184,4 +188,16 @@ public class AgentService {
 
 
 }
+=======
+        @Autowired
+        private OperationRepository operationRepository;
+        public List<OperationResponse> getAgentOperation(Long id) {
+            List<Operation> operations = operationRepository.findOperationsByAgentId(id);
+            return operations.stream()
+                    .map(OperationMapper::ConvertToDto)
+                    .collect(Collectors.toList());
+        }
+
+        }
+>>>>>>> 0726179d88c9dd27054c6b8a9740d258ceb00cc7
 

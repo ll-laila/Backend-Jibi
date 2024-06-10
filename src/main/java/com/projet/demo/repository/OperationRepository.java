@@ -18,5 +18,7 @@ public interface OperationRepository extends JpaRepository<Operation,Long> {
 
     @Query("SELECT a FROM Operation a WHERE a.client.phoneNumber = :phoneNumber")
     List<Operation> findOperationsByPhoneNumber(@Param("phoneNumber") String phoneNumber);
+    @Query("SELECT a FROM Operation a WHERE a.idCreditor = :id_creditor")
+    List<Operation> findOperationsByAgentId(@Param("id_creditor") Long id_creditor);
 
 }
