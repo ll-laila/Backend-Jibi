@@ -1,6 +1,7 @@
 package com.projet.demo.repository;
 
 import com.projet.demo.entity.Client;
+import org.aspectj.weaver.loadtime.Agent;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -32,11 +33,13 @@ public interface ClientRepository extends JpaRepository<Client,Long> {
     Optional<Client> findById(Long userId);
 
     @Query(value = "SELECT * FROM client WHERE phone_number = ?1 ", nativeQuery = true)
-   // Client findByPhoneNumber(String phoneNumber);
     Optional<Client> findByPhoneNumber(String phoneNumber);
+
+    List<Client> findByAgentId(Long agentId);
 
     @Query(value = "SELECT * FROM client WHERE phone_number = ?1 ", nativeQuery = true)
     Client findByPhoneNum(String phoneNumber);
+
 
 
 

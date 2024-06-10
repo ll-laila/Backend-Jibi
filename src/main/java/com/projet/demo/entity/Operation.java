@@ -17,9 +17,13 @@ public class Operation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String refOperation;
+
     private double amount;
 
     private String creditorName;
+
+    private Long idCreditor;
 
     private String serviceName;
 

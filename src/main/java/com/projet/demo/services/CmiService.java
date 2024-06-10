@@ -44,17 +44,17 @@ public class CmiService {
         double amount = feedAccountRequest.getAmount();
 
         if (bankAccount == null) {
-            return new FeedAccountResponse(false, "Compte bancaire introuvable");
+            return new FeedAccountResponse( "Compte bancaire introuvable");
         }
 
         if (bankAccount.getBalance() < amount) {
-            return new FeedAccountResponse(false, "Solde insuffisant");
+            return new FeedAccountResponse("Solde insuffisant");
         }
 
         try {
             validateAmount(paymentAccount, amount);
         } catch (Exception e) {
-            return new FeedAccountResponse(false, e.getMessage());
+            return new FeedAccountResponse(e.getMessage());
         }
 
         paymentAccount.setAccountBalance(paymentAccount.getAccountBalance() + amount);
@@ -63,7 +63,7 @@ public class CmiService {
         bankAccountRepository.save(bankAccount);
         paymentAccountRepository.save(paymentAccount);
 
-        return new FeedAccountResponse(true, "Alimentation du compte réussie");
+        return new FeedAccountResponse("Alimentation du compte réussie");
     }
 
 
@@ -76,17 +76,17 @@ public class CmiService {
         switch (type) {
             case "200":
                 if (amount > 200) {
-                    throw new Exception("Impossible d'alimenter avec ce montant pour ce type de compte");
+                    throw new Exception("Impossible d'alimenter avec ce montant");
                 }
                 break;
             case "5000":
                 if (amount > 5000) {
-                    throw new Exception("Impossible d'alimenter avec ce montant pour ce type de compte");
+                    throw new Exception("Impossible d'alimenter avec ce montant");
                 }
                 break;
             case "20000":
                 if (amount > 20000) {
-                    throw new Exception("Impossible d'alimenter avec ce montant pour ce type de compte");
+                    throw new Exception("Impossible d'alimenter avec ce montant");
                 }
                 break;
         }
@@ -118,16 +118,18 @@ public class CmiService {
         if (client.getPaymentAccount().getAccountBalance() >= amount) {
             doTransaction(creditor, client, amount);
             Operation operation = new Operation();
+            operation.setRefOperation(paymentRequest.getRefOperation());
             operation.setAmount(amount);
             operation.setCreditorName(creditor.getFirstName() + " " + creditor.getLastName());
+            operation.setIdCreditor(paymentRequest.getIdCreditor());
             operation.setServiceName(service.getName());
             operation.setDoItAt(LocalDateTime.now());
             operation.setClient(client);
             operationRepository.save(operation);
 
-            return new PaymentResponse(true, "Opération effectuée avec succès.");
+            return new PaymentResponse(1,"Transaction effectuée avec succès.");
         } else {
-            return new PaymentResponse(false, "Solde insuffisant.");
+            return new PaymentResponse(0,"Solde insuffisant.");
         }
     }
 

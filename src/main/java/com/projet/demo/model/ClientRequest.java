@@ -10,6 +10,7 @@ import java.util.Date;
 @Data
 
 public class ClientRequest {
+    private Long agentId;
     private String firstName;
     private String lastName;
     private String email;
