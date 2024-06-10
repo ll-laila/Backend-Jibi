@@ -61,6 +61,7 @@ public class AgentController {
     }
 
 
+
     @GetMapping("/client/{id}")
     @PreAuthorize("hasAuthority('agent:read')")
     public Client getById(@PathVariable("id") Long id) {
