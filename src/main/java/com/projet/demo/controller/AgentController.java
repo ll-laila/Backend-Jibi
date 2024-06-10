@@ -152,4 +152,15 @@ public class AgentController {
         return ResponseEntity.ok(operations);
     }
 
+    @GetMapping("/serviceById/{serviceId}")
+    @PreAuthorize("hasAuthority('agent:read')")
+    public ResponseEntity<AgentServiceResponse> getServiceById(@PathVariable Long serviceId) {
+        AgentServiceResponse serviceResponse = agentservice.getServiceById(serviceId);
+        if (serviceResponse == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(serviceResponse);
+    }
 }
+
+
