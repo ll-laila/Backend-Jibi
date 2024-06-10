@@ -1,16 +1,12 @@
 package com.projet.demo.services;
 
 import com.projet.demo.config.JwtService;
-import com.projet.demo.entity.BankAccount;
-import com.projet.demo.entity.Client;
-import com.projet.demo.entity.PaymentAccount;
-import com.projet.demo.entity.Role;
-import com.projet.demo.model.AgentRequest;
-import com.projet.demo.model.ClientRequest;
-import com.projet.demo.model.PaymentAccountRequest;
-import com.projet.demo.model.RegisterAgentResponse;
+import com.projet.demo.entity.*;
+import com.projet.demo.mapper.OperationMapper;
+import com.projet.demo.model.*;
 import com.projet.demo.repository.BankAccountRepository;
 import com.projet.demo.repository.ClientRepository;
+import com.projet.demo.repository.OperationRepository;
 import com.projet.demo.repository.PaymentAccountRepository;
 import com.projet.demo.token.Token;
 import com.projet.demo.token.TokenRepository;
@@ -21,6 +17,7 @@ import com.vonage.client.sms.SmsSubmissionResponse;
 import com.vonage.client.sms.messages.TextMessage;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.weaver.loadtime.Agent;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +26,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -164,6 +162,15 @@ public class AgentService {
                     return RegisterAgentResponse.builder().message("Error during Deleting").build();
                 }
             }
+
+        @Autowired
+        private OperationRepository operationRepository;
+        public List<OperationResponse> getAgentOperation(Long id) {
+            List<Operation> operations = operationRepository.findOperationsByAgentId(id);
+            return operations.stream()
+                    .map(OperationMapper::ConvertToDto)
+                    .collect(Collectors.toList());
+        }
 
         }
 

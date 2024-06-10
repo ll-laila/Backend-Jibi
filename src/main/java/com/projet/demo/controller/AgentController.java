@@ -1,10 +1,7 @@
 package com.projet.demo.controller;
 
 import com.projet.demo.entity.Client;
-import com.projet.demo.model.AgentServiceRequest;
-import com.projet.demo.model.ClientRequest;
-import com.projet.demo.model.PaymentAccountRequest;
-import com.projet.demo.model.RegisterAgentResponse;
+import com.projet.demo.model.*;
 import com.projet.demo.services.AgentService;
 import com.projet.demo.services.ClientService;
 import com.projet.demo.services.AgentServicesService;
@@ -134,6 +131,10 @@ private final ClientService clientService;
         return agentservice.deleteService(serviceId);
     }
 
-
-
+    @GetMapping("/operations/{id}")
+    @PreAuthorize("hasAuthority('agent:read')")
+    public ResponseEntity<List<OperationResponse>> getAgentOperations(@PathVariable Long id) {
+        List<OperationResponse> operations = service.getAgentOperation(id);
+        return ResponseEntity.ok(operations);
+    }
 }
