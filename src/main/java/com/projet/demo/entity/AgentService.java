@@ -24,4 +24,6 @@ public class AgentService {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "agent_id")
     private Client agent;
+
+
 }

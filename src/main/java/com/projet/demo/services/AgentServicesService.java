@@ -4,8 +4,10 @@ import com.projet.demo.entity.AgentService;
 import com.projet.demo.entity.Client;
 import com.projet.demo.entity.Role;
 import com.projet.demo.mapper.AgentServiceMapper;
+import com.projet.demo.mapper.ClientMapper;
 import com.projet.demo.model.AgentServiceRequest;
 import com.projet.demo.model.AgentServiceResponse;
+import com.projet.demo.model.ClientProfileResponse;
 import com.projet.demo.model.RegisterAgentResponse;
 import com.projet.demo.repository.AgentServiceRepository;
 import com.projet.demo.repository.ClientRepository;
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,6 +32,14 @@ public class AgentServicesService {
                 .map(AgentServiceMapper::ConvertToDto)
                 .collect(Collectors.toList());
     }
+
+    public AgentServiceResponse getServiceById(Long id) {
+        return agentServiceRepository.findById(id)
+                .map(AgentServiceMapper::ConvertToDto)
+                .orElse(null);
+    }
+
+
 
     public RegisterAgentResponse createService(AgentServiceRequest request, Long id ) {
         // Trouver l'agent par son numéro de téléphone
