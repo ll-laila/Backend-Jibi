@@ -85,28 +85,27 @@ public class AgentService {
                         .build();
                 client.setPaymentAccount(paymentAccount);
                 client.setBankAccount(bankAccount);
-
+                client.setIsFirstLogin(true);
                 var savedClient = repository.save(client);
                 var jwtToken = jwtService.generateToken(client);
 
                 saveUserToken(savedClient, jwtToken);
 
-                // Envoi de SMS via Vonage
-                String formattedPhoneNumber = formatPhoneNumber(request.getPhoneNumber());
-                TextMessage message = new TextMessage("Jibi LKLCF",
+
+                /*String formattedPhoneNumber = formatPhoneNumber(request.getPhoneNumber());
+                TextMessage message = new TextMessage("Jibi LKLCSF",
                         formattedPhoneNumber,
                         "Bonjour " + request.getFirstName() + ", votre mot de passe est " + generatedPassword + "."
                 );
-                SmsSubmissionResponse response = VonageClient.builder().apiKey("2053ed34").apiSecret("j2Cy3qjnDhKlnCbi").build().getSmsClient().submitMessage(message);
+                SmsSubmissionResponse response = VonageClient.builder().apiKey("b5813842").apiSecret("pDcUfRrQBiEAbd7s").build().getSmsClient().submitMessage(message);
                 if (response.getMessages().get(0).getStatus() == MessageStatus.OK) {
                     System.out.println("Message sent successfully.");
                 } else {
                     System.out.println("Message failed with error: " + response.getMessages().get(0).getErrorText());
-                }
+                }*/
 
                 return RegisterAgentResponse.builder().message("Success: " + generatedPassword).build();
             }
-
 
             private void saveUserToken (Client user, String jwtToken){
                 var token = Token.builder()
@@ -123,26 +122,20 @@ public class AgentService {
             paymentAccountRequest){
                 Client client = repository.findClientByClientId(id);
                 if (client != null) {
-                    // Mettre à jour les informations du client
                     client.setFirstName(clientRequest.getFirstName());
                     client.setLastName(clientRequest.getLastName());
                     client.setEmail(clientRequest.getEmail());
                     client.setPhoneNumber(clientRequest.getPhoneNumber());
-
-                    // Mettre à jour les informations du compte de paiement
                     PaymentAccount paymentAccount = client.getPaymentAccount();
                     paymentAccount.setType(paymentAccountRequest.getType()); // Mettre à jour le type du compte de paiement
 
-                    // Enregistrer les modifications
                     repository.save(client);
-
                     return RegisterAgentResponse.builder().message("Agent updated successfully").build();
                 } else {
                     System.out.println("The Client with the given Id does not exist in the database");
                     return RegisterAgentResponse.builder().message("Error: Client not found").build();
                 }
             }
-
 
             public List<Client> findAll () {
                 return repository.findAllClientsWithRoleClient();

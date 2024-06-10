@@ -12,7 +12,7 @@ import java.util.List;
 
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 //@CrossOrigin(origins = "*")
 @RequestMapping("/cmi/service")
 @PreAuthorize("hasRole('CLIENT')")
