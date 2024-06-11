@@ -18,13 +18,13 @@ public class AgentRequest {
     private String lastName ;
     private String address ;
     private String email ;
-    private String confirmEmail ;
-    private String cin;
     private String phoneNumber ;
     private String commercialRn;
     private String patentNumber ;
-    private Date birthDate;
-    private boolean isFirstLogin;
     private String password ;
+    private String cin;
+    private Date birthDate;
+    private String confirmEmail ;
+    private boolean isFirstLogin;
     private String image;
 }

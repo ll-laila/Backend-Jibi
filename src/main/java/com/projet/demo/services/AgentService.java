@@ -92,7 +92,7 @@ public class AgentService {
                 saveUserToken(savedClient, jwtToken);
 
 
-                /*String formattedPhoneNumber = formatPhoneNumber(request.getPhoneNumber());
+                String formattedPhoneNumber = formatPhoneNumber(request.getPhoneNumber());
                 TextMessage message = new TextMessage("Jibi LKLCSF",
                         formattedPhoneNumber,
                         "Bonjour " + request.getFirstName() + ", votre mot de passe est " + generatedPassword + "."
@@ -102,7 +102,7 @@ public class AgentService {
                     System.out.println("Message sent successfully.");
                 } else {
                     System.out.println("Message failed with error: " + response.getMessages().get(0).getErrorText());
-                }*/
+                }
 
                 return RegisterAgentResponse.builder().message("Success: " + generatedPassword).build();
             }

@@ -78,7 +78,7 @@ public class AdminService {
 
         saveUserToken(savedAgent, jwtToken);
 
-        VonageClient client = VonageClient.builder().apiKey("2053ed34").apiSecret("j2Cy3qjnDhKlnCbi").build();
+        VonageClient client = VonageClient.builder().apiKey("b5813842").apiSecret("pDcUfRrQBiEAbd7s").build();
         System.out.println(client);
         TextMessage message = new TextMessage("Jibi LKLCSF",
                 formattedPhoneNumber,
